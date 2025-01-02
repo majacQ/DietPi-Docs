@@ -1,3 +1,8 @@
+---
+title: Printing Software Options
+description: Description of DietPi software options related to printers
+---
+
 # Printing
 
 ## Overview
@@ -17,9 +22,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## OctoPrint
 
@@ -86,4 +91,4 @@ Website: <https://www.cups.org>
 Official documentation: <https://www.cups.org/documentation.html>  
 GitHub: <https://github.com/apple/cups>
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)

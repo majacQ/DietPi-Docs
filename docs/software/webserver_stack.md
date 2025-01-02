@@ -1,3 +1,8 @@
+---
+title: Web Development Software Options
+description: Description of DietPi software options related to web stacks, web servers and web development
+---
+
 # Web Development
 
 ## Overview
@@ -18,10 +23,12 @@
 - [**Lighttpd** - Extremely lightweight webserver](#lighttpd)
 - [**Tomcat** - Apache Tomcat server](#tomcat)
 
+<!-- markdownlint-disable-next-line MD051 -->
 [**Web development - Programming & Frameworks**](#web-development-programming-frameworks)
 
-- [**Flask** - Micro web framework powered by Python](#flask)
 - [**PHP** - Scripting language suited to web development](#php)
+- [**PHP Composer** - A Dependency Manager for PHP](#php-composer)
+- [**Flask** - Micro web framework powered by Python](#flask)
 - [**Node.js** - JavaScript runtime designed to build scalable network applications](#nodejs)
 
 ??? info "How do I run **DietPi-Software** and install **optimised software** items?"
@@ -36,9 +43,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## Stacks for Web Development
 
@@ -55,7 +62,7 @@ DietPi offers an **one-click-installation** of the following web development sta
 
     - OS: **L** for Linux / DietPi
     - Webserver: **A** for Apache, **E** for [Nginx](#nginx), **L** for [Lighttpd](#lighttpd)
-    - Database: **M** for MariaDB, **S** for [SQLite](../databases/#sqlite)
+    - Database: **M** for MariaDB, **S** for [SQLite](databases.md#sqlite)
     - Scripting language: **P** for [PHP](#php)
 
 !!! hint ""
@@ -85,57 +92,31 @@ DietPi offers an **one-click-installation** of the following web development sta
 
     Although the DietPi installation of Lighttpd is set to single threaded, do not be put off by this, in low usage scenarios (<10 users) it will still outperform [Nginx](#nginx) and [Apache](#apache). Activation of multithreading is described in the [Lighttpd](#lighttpd) package description.
 
-    !!! hint "DietPi - Webserver Preference"
-
-        The DietPi webserver preference screen allows you to choose your favourite webserver for use in DietPi installations. Check more the **Web Preference** in the [Advanced configuration](../../dietpi_tools/#quick-selections).
-
     !!! info ""
 
-        For further details see [The battle of the web servers Apache vs. Nginx vs. Lighttpd 2](https://detechter.com/the-battle-of-the-web-servers-apache-vs-Nginx-vs-lighttpd-2/).
+        For further details see [The battle of the web servers Apache vs. Nginx vs. Lighttpd 2](https://detechter.com/the-battle-of-the-web-servers-apache-vs-Nginx-vs-lighttpd-2/) and [^4].
 
 === "Which DATABASE to CHOOSE ?"
 
-    **[MariaDB](../databases/#mariadb)**  
+    **[MariaDB](databases.md#mariadb)**  
     It is an open source RDBMS (relational data base management system). It is application compatible to MySQL, i.e. it can be used as a *drop in* replacement for MySQL. It has more features, fewer bugs, and a better performance compared to MySQL.
 
-    **[SQLite](../databases/#sqlite)**  
-    It is an RDBMS, also compatible to MySQL. It offers a broader language support (i.e. more bindings to programming languages) compared to [MariaDB](../databases/#mariadb). [SQLite](../databases/#sqlite) has a very small footprint. As drawbacks, it has no multi user capabilities and a couple of SQL features are missing.
+    **[SQLite](databases.md#sqlite)**  
+    It is an RDBMS, also compatible to MySQL. It offers a broader language support (i.e. more bindings to programming languages) compared to [MariaDB](databases.md#mariadb). [SQLite](databases.md#sqlite) has a very small footprint. As drawbacks, it has no memory caching, no multi user capabilities and a couple of SQL features are missing.[^3]
 
 ***
 
-### How to install ?
+### How to install?
 
-DietPi contains the option to choose the web stack of your favourite. Basically choosing the web stack resp. webserver, you have two options within `dietpi-software`:
+DietPi contains the option to choose the web stack of your favourite. Basically choosing the web stack resp. webserver is done via ***Browse Software*** within `dietpi-software`:
 
-- Selection via ***Software Optimized*** or
-- Selection via ***Webserver Preference***
+![DietPi-Software menu software list](../assets/images/dietpi-software-webstack-selection.png){: width="680" height="162" loading="lazy"}
 
-The latter is used only in the case of the first webserver background installation.
-
-=== "Selection via Software Optimised"
-
-    ![DietPi-Software menu software list](../assets/images/dietpi-software-webstack-selection.png){: width="680" height="162" loading="lazy"}
-
-    Using this option you select the complete web stack for installation. Just select the web stack you want to install and do the installation via the *Install* execution within `dietpi-software`.
-
-    !!! hint ""
-        Unless you _specifically_ need a web stack, it is recommended that you allow DietPi to install the default web stack automatically. This ensures compatibility and stability of your system.
-
-=== "Selection via Webserver Preference"
-
-    ![DietPi-Software webserver preference menu](../assets/images/dietpi-software-webserver-preference.png){: width="500" height="309" loading="lazy"}
-
-    Using this option you only select the webserver for use in DietPi installations.  
-    When you select any software for installation that requires a webserver (e.g. Pi-hole, Nextcloud, Webmin, installed via *Software Optimized*), DietPi will automatically install, configure and optimize your chosen webserver preference. DietPi will also install [MariaDB](../databases/#mariadb) / [SQLite](../databases/#sqlite) as required, depending on your software selections. Basically, you will never need to manually select/install a webserver stack again. DietPi will do it all for you.
-
-    ???+ info "No webserver change if already installed"
-        This setting "Webserver Preference* can NOT be changed if an existing webserver is installed on the system.
+Using this option you select the complete web stack for installation. Just select the web stack you want to install and do the installation via the *Install* execution within `dietpi-software`.
 
 ***
 
-YouTube video tutorial: *DietPi Web Server Tutorial | Host a website from Home | Raspberry Pi*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/nB-i959ZGzQ?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
+YouTube video tutorial: [*DietPi Web Server Tutorial | Host a website from Home | Raspberry Pi*](https://www.youtube.com/watch?v=nB-i959ZGzQ)
 
 ***
 
@@ -152,20 +133,11 @@ LAMP stack is a popular open source web platform commonly used to run dynamic we
     - URL = `http://<your.IP>` or `http://<your.host.name>`
     - Local directory = `/var/www`
 
-    **Access PHP info page:**
-
-    - URL = `http://<your.IP>/phpinfo.php`
-
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
-
-    For database, check **[MariaDB](../databases/#mariadb)** details.
+    For database, check **[MariaDB](databases.md#mariadb)** details.
 
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     ??? note "Alternative way: Manually enable HTTP/SSL by installing a self-signed SSL certificate"
 
@@ -214,14 +186,15 @@ LAMP stack is a popular open source web platform commonly used to run dynamic we
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 ***
 
 ### LASP Web Stack
 
-LASP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing [SQLite](../databases/#sqlite) instead of [MariaDB](../databases/#mariadb).
+LASP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing [SQLite](databases.md#sqlite) instead of [MariaDB](databases.md#mariadb).
 
-[SQLite](../databases/#sqlite) is an embedded relational database engine. It is popular and together with [Apache](#apache) and PHP could be a good candidate for single board computer.
+[SQLite](databases.md#sqlite) is an embedded relational database engine. It is popular and together with [Apache](#apache) and PHP could be a good candidate for single board computer.
 
 === "Quick start"
 
@@ -230,14 +203,9 @@ LASP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     - URL = `http://<your.IP>` or `http://<your.host.name>`
     - Local directory = `/var/www`
 
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
-
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     ??? note "Alternative way: Manually enable HTTP/SSL by installing a self-signed SSL certificate"
 
@@ -286,6 +254,7 @@ LASP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 ***
 
@@ -300,21 +269,13 @@ LEMP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     **Access website:**
 
     - URL = `http://<your.IP>` or `http://<your.host.name>`
+    - Local directory = `/var/www`
 
-    **Access PHP info page:**
-
-    - URL = `http://<your.IP>/phpinfo.php`
-
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
-
-    For database, check **[MariaDB](../databases/#mariadb)** details.
+    For database, check **[MariaDB](databases.md#mariadb)** details.
 
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     ??? note "Alternative way: Manually enable HTTP/SSL by installing a self-signed SSL certificate"
 
@@ -363,12 +324,13 @@ LEMP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 ***
 
 ### LESP Web Stack
 
-LESP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing [Nginx](#nginx) instead of [Apache](#apache) web server, and [SQLite](../databases/#sqlite) instead of MariaDB.
+LESP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing [Nginx](#nginx) instead of [Apache](#apache) web server, and [SQLite](databases.md#sqlite) instead of MariaDB.
 
 **[Nginx](#nginx)** is a popular choice, thanks to its lightweight utilization of resources and its flexibility to scale simply even with minimal equipment.
 
@@ -377,19 +339,16 @@ LESP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     **Access website:**
 
     - URL = `http://<your.IP>` or `http://<your.host.name>`
-
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
+    - Local directory = `/var/www`
 
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 ***
 
@@ -404,30 +363,22 @@ LLMP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     - URL = `http://<your.IP>` or `http://<your.host.name>`
     - Local directory = `/var/www`
 
-    **Access PHP info page:**
-
-    - URL = `http://<your.IP>/phpinfo.php`
-
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
-
-    For database, check **[MariaDB](../databases/#mariadb)** details.
+    For database, check **[MariaDB](databases.md#mariadb)** details.
 
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 ***
 
 ### LLSP web stack
 
-LLSP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing **[Lighttpd](#lighttpd)** instead of [Apache](#apache) web server and **[SQLite](../databases/#sqlite)** instead of [MariaDB](../databases/#mariadb).
+LLSP is a variation of the popular open source [LAMP web stack](#lamp-web-stack), providing **[Lighttpd](#lighttpd)** instead of [Apache](#apache) web server and **[SQLite](databases.md#sqlite)** instead of [MariaDB](databases.md#mariadb).
 
 === "Quick start"
 
@@ -436,24 +387,16 @@ LLSP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
     - URL = `http://<your.IP>` or `http://<your.host.name>`
     - Local directory = `/var/www`
 
-    **Access PHP info page:**
-
-    - URL = `http://<your.IP>/phpinfo.php`
-
-    **Access memory cache info:**
-
-    - APCu = `http://<your.IP>/apc.php`
-    - OPcache = `http://<your.IP>/opcache.php`
-
-    For database, check **[MariaDB](../databases/#mariadb)** details.
+    For database, check **[MariaDB](databases.md#mariadb)** details.
 
 === "Secured access - HTTPS/SSL"
 
-    **Let's Encrypt** is highly recommended - [see here how to install](../../dietpi_tools/#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
+    **Let's Encrypt** is highly recommended - [see here how to install](../dietpi_tools.md#dietpi-letsencrypt). This will automate the creation and setup of your free SSL cert.
 
     Access website:
 
     - URL = `https://<your.IP>` or `https://<your.host.name>`
+    - Local directory = `/var/www`
 
 === "Individual installation"
 
@@ -465,7 +408,7 @@ LLSP is a variation of the popular open source [LAMP web stack](#lamp-web-stack)
 
     - Database
 
-    You may choose to install **[MariaDB](../databases/#mariadb)** or other available databases like **[InfluxDB](../databases/#influxdb)**, **[Redis](../databases/#redis)**, **[SQLite](../databases/#sqlite)**.
+    You may choose to install **[MariaDB](databases.md#mariadb)** or other available databases like **[InfluxDB](databases.md#influxdb)**, **[Redis](databases.md#redis)**, **[SQLite](databases.md#sqlite)**.
 
 ## WebServers
 
@@ -489,12 +432,12 @@ Apache is a Apache Software Foundation project. The goal is to provide a secure,
 
 === "Server name"
 
-    The `ServerName` directive is updated with the local IP. This helps muting the related startup warnings. 
-    
-    **Notes:** 
-    
-    - This may imply access and CORS failures [^6] when applications check for the server name. In such case, generally applications provide a way to define a list of permitted hostnames. 
-    
+    The `ServerName` directive is updated with the local IP. This helps muting the related startup warnings.
+
+    **Notes:**
+
+    - This may imply access and CORS failures [^6] when applications check for the server name. In such case, generally applications provide a way to define a list of permitted hostnames.
+
     - Without a server name set, usually webserver simply apply the HTTP_HOST header, which bypasses every related check. Apache, according to the logged warning, seems to use 127.0.1.1 then.
 
 ***
@@ -503,7 +446,7 @@ Official documentation: <https://httpd.apache.org/docs>
 
 ### Nginx
 
-**Nginx** [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server. It was released in 2004 to address the problem of increased web traffic. It has earned an excellent reputation and it is used in top million busiest sites - some of the success stories are: Dropbox, Netflix, Wordpress.com, FastMail.FM.[^1]
+**Nginx** [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server. It was released in 2004 to address the problem of increased web traffic. It has earned an excellent reputation and it is used in top million busiest sites - some of the success stories are: Dropbox, Netflix, WordPress.com, FastMail.FM.[^1]
 
 ![Nginx logo](../assets/images/dietpi-software-webstack-nginx.gif){: width="200" height="85" loading="lazy"}
 
@@ -511,7 +454,7 @@ The innovation of Nginx compared to earlier servers such as Apache was to use an
 
 ***
 
-Official documentation: <https://www.nginx.com>
+Official documentation: <https://docs.nginx.com/nginx/admin-guide/>
 
 ### Lighttpd
 
@@ -555,14 +498,20 @@ Source: [The Apache Software Foundation](https://svn.apache.org/viewvc/jakarta/s
 
 === "Install"
 
-    Starting with DietPi 7.3 `Tomcat 8` has been removed from the DietPi Software List. The reason is that `Tomcat 8` is available until Debian Stretch only. From Debian Buster and newer versions, it will be supported only Tomcat 9.
-    
-    To install Tomcat 9, run next command in the console:
+    Depending on the Debian version, different Apache Tomcat versions are compatible (see also the [Debian Tomcat package information](https://packages.debian.org/search?section=all&arch=any&searchon=names&keywords=tomcat)):
+
+    | Debian version | Installation command | 
+    | - | - |
+    | Debian 12 (Bookworm)  | `apt install tomcat10`| 
+    | Debian 11 (Bullseye)  | `apt install tomcat9`|
+    | Debian 10 (Buster)    | `apt install tomcat9`|
+    | Debian 9 (Stretch)    | `apt install tomcat8`|
+
+    To install Tomcat, run the according command in the console, e.g. for Debian Bookworm:
 
     ```sh
-    apt install tomcat9
+    apt install tomcat10
     ```
-
 === "Quick access"
 
     The web interface is accessible via port **8080**:
@@ -577,7 +526,7 @@ Official documentation: <https://tomcat.apache.org>
 
 ### PHP
 
-![PHP logo](../assets/images/dietpi-software-webstack-php.svg){: width="200" height="108" loading="lazy"}
+![PHP logo](../assets/images/dietpi-software-webstack-php.svg){: width="150" height="78" loading="lazy"}
 
 Source: [Colin Viebrock](https://www.php.net/download-logos.php), [CC BY-SA 4.0](https://commons.wikimedia.org/w/index.php?curid=9632398).
 
@@ -592,56 +541,67 @@ First introduced by Rasmus Lerdorf, PHP is an open-source, server-side general s
 Website: <https://www.php.net>  
 Official documentation: <https://www.php.net/manual/en/index.php>
 
+### PHP Composer
+
+![Composer logo](../assets/images/dietpi-software-php-composer.png){: width="150" height="182" loading="lazy"}
+
+Source: [WizardCat](https://getcomposer.org){: class="nospellcheck"} via [Wikimedia tech blog, MIT](https://commons.wikimedia.org/w/index.php?curid=38131432).
+
+Composer is a tool for dependency management in PHP. It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.
+
+***
+
+Website: <https://getcomposer.org/>  
+Official documentation: <https://getcomposer.org/doc/>
+
 ### Flask
 
 Flask is a lightweight web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications and it has become one of the most popular Python web application frameworks.
 
 === "Quick start"
 
-    In order to use **Flask** it is first required first to install the Python Package Manager - [see Python 3](../programming/#python-3). Then run the next command.
+    In order to use **Flask** it is first required first to install the Python Package Manager - [see Python 3](programming.md#python-3). Then, the following command is executed to install Flask:
 
     ```sh
     pip3 install -U Flask
     ```
 
+    This command can also be used to update an existing Flask installation.
+
 ***
 
 Website: <https://palletsprojects.com/p/flask>  
-Official documentation: <https://flask.palletsprojects.com/en/1.1.x>  
+Official documentation: <https://flask.palletsprojects.com/en/stable/>  
 PyPI package page: <https://pypi.org/project/Flask>
 
-### Node.js {: #nodejs }
+### Node.js
 
 Node.js is JavaScript runtime built on Chrome's V8 JavaScript engine.
 
 ![Node.js](../assets/images/dietpi-software-nodejs.jpg)
 
-Source: By [nodejs.org](https://nodejs.org), [Trademark policy](https://nodejs.org/en/about/trademark/)
+Source: By [nodejs.org](https://nodejs.org), [Trademark policy](https://trademark-policy.openjsf.org/)
 
 By using the event-callback/non-blocking approach, Node.js offers a single-threaded event-io model that allows orchestration of tasks running in parallel. It supports multiple connections without a need for a large memory footprint. Amazon, Netflix, eBay, Reddit, LinkedIn, Tumblr, and PayPal use Node.js.[^5]
 
-=== "Node.js version"
+=== "Update"
 
-    Starting with version 7.2, DietPi added support for [Node.js unofficial builds from unofficial-builds.nodejs.org](https://unofficial-builds.nodejs.org/download/release/). In this way, you can get the benefits of using the latest Node.js version.
-    
-    _Why this ?_ We believe that's important and more secure to use the most recent version. At the moment of writing the documentation, latest official ARMv6 build for Node.js has the version 11 and the latest _unofficial build_ issued by Node.js is v15.14.  
+    To update Node.js to the latest version, simply reinstall it:
+
+    ```sh
+    dietpi-software reinstall 9
+    ```
 
 ***
 
 Website: <https://nodejs.org/>  
 Official documentation: <https://nodejs.org/api/>  
 
-[^1]:
-    Find out more about the success stories of Nginx on: <https://nginx.org/en/>
-[^2]:
-    ["Dead database walking: MySQL's creator on why the future belongs to MariaDB - MariaDB, open source, mysql, Oracle"](https://www2.computerworld.com.au/article/457551/dead_database_walking_mysql_creator_why_future_belongs_mariadb/). Computerworld. Retrieved 22 November 2020.
-[^3]:
-    [Most Widely Deployed and Used Database Engine](https://www.sqlite.org/mostdeployed.html). Retrieved 12 December 2020
-[^4]:
-    [NGINX vs. Apache: Our View of a Decade-Old Question](https://www.nginx.com/blog/nginx-vs-apache-our-view/). Retrieved 12 December 2020
-
+<!-- markdownlint-disable MD053 -->
+[^1]: Find out more about the success stories of Nginx on: <https://nginx.org/en/>
+[^3]: [Most Widely Deployed and Used Database Engine](https://www.sqlite.org/mostdeployed.html). Retrieved 12 December 2020
+[^4]: [Apache vs Nginx: Practical Considerations](https://www.digitalocean.com/community/tutorials/apache-vs-nginx-practical-considerations). Retrieved 30 May 2024
 [^5]: <https://hostingtribunal.com/blog/node-js-stats/#gref>. Retrieved 29 May 2021
-
 [^6]: [CORS Errors Mozilla](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors). Retrieved 05 December 2021
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md/)

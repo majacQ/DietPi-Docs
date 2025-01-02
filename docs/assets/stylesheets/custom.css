@@ -1,8 +1,11 @@
 /* Colours */
+
 :root {
     --md-accent-fg-color: #9ccc00;
     --md-primary-fg-color: #7b952f;
     --md-primary-fg-color--dark: #164046;
+    --md-text-font: "Roboto";
+    --md-code-font: "Roboto Mono";
 }
 
 :root>* {
@@ -20,6 +23,33 @@
     .md-nav--primary .md-nav__title a:hover {
         color: #164046;
     }
+}
+
+/* Menu buttons */
+
+.md-banner__inner {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 5px 15px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.md-banner__inner > a {
+	font-family: Arial, sans-serif;
+	font-size: 15px;
+	line-height: 20px;
+	margin: 4px 0;
+	padding: 10px 14px;
+	border: 1px solid #164046;
+	border-radius: 4px;
+	transition: border-color 1s !important;
+}
+.md-banner__inner > a:hover,
+.md-banner__inner > a:focus,
+.md-banner__inner > a:active {
+	color: #fff;
+	border-color: #c5ff00;
 }
 
 /* Announcement */
@@ -54,6 +84,12 @@
     color: #164046;
 }
 
+/* Images: Reduce max width to 95% of container width */
+.md-typeset img,
+.md-typeset svg {
+    max-width: 95%;
+}
+
 /* Tables */
 
 .md-typeset table:not([class]) th {
@@ -86,4 +122,47 @@
 
 .md-footer-meta a:is(:focus,:hover) {
     color: #9ccc00 !important;
+}
+
+/* Roboto fonts */
+
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  font-display: fallback;
+  src: url(/docs/assets/fonts/Roboto400i.woff2) format('woff2');
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: fallback;
+  src: url(/docs/assets/fonts/Roboto300.woff2) format('woff2');
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: url(/docs/assets/fonts/Roboto400.woff2) format('woff2');
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: fallback;
+  src: url(/docs/assets/fonts/Roboto700.woff2) format('woff2');
+}
+/* latin */
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: url(/docs/assets/fonts/RobotoMono.woff2) format('woff2');
 }

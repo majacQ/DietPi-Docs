@@ -1,3 +1,8 @@
+---
+title: File Servers Options
+description: Description of DietPi software options related to file servers
+---
+
 # File Servers
 
 ## Overview
@@ -19,9 +24,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## ProFTPD
 
@@ -115,13 +120,61 @@ The Samba server lets you share files on your DietPi system with ease based on t
     systemctl restart nmbd smbd
     ```
 
+=== "Use `wsdd` to view shares"
+
+    In case of problems with the Samba share not showing up in the Windows network view, the `wsdd` daemon (Web Service Dynamic Discovery host daemon) can be installed. This is achieved with the following steps:
+
+    === "Bookworm and later"
+
+        Install WSDD via APT:
+
+        ```sh
+        apt install wsdd2
+        ```
+
+        Start the service via:
+
+        ```sh
+        systemctl start wsdd2
+        ```
+
+        Check the service status via:
+
+        ```sh
+        systemctl status wsdd2
+        ```
+
+        !!! note "We use the WSDD2 variant written in C here."
+
+            The original WSDD is written in Python, but we prefer the C variant, for less dependencies and RAM usage. In case, you could also use the original variant, where package and service are called `wsdd` instead of `wsdd2`.
+
+    === "Bullseye and earlier"
+
+        Add the 3rd party repository and install WSDD via APT:
+
+        ```sh
+        curl -sSfL 'https://pkg.ltec.ch/public/conf/ltec-ag.gpg.key' | gpg --dearmor -o /etc/apt/trusted.gpg.d/dietpi-wsdd.gpg --yes
+        echo "deb https://pkg.ltec.ch/public/ $G_DISTRO_NAME main" > /etc/apt/sources.list.d/dietpi-wsdd.list
+        apt update
+        apt install wsdd
+        ```
+
+        Start the service via:
+
+        ```sh
+        systemctl start wsdd
+        ```
+
+        Check the service status via:
+
+        ```sh
+        systemctl status wsdd
+        ```
+
 ***
 
-Wikipedia: <https://wikipedia.org/wiki/Samba_(software)>
-
-YouTube video tutorial (German language): `Raspberry Pi als Datei-Server - einfache Installation eines Fileservers Samba unter DietPi`.
-
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/XB2F_Gyjw0s" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+Wikipedia: <https://wikipedia.org/wiki/Samba_(software)>  
+YouTube video tutorial (German language): [Raspberry Pi als Datei-Server - einfache Installation eines Fileservers Samba unter DietPi](https://www.youtube.com/watch?v=XB2F_Gyjw0s){:class="nospellcheck"}
 
 ## vsftpd
 
@@ -176,7 +229,7 @@ Network file system server.
 === "Access configuration"
 
     The NFS access configuration is done via **export files**.  
-    You can edit the `/etc/exports` file as well as adding further export files within the `/etc/exports.d` directory.
+    Therefore, the file `/etc/exports` can be edited as well as adding further export files within the `/etc/exports.d` directory.
 
     **Explanations of the export file format** are available in the internet or can be read in the man pages (use `man exports`, therefore the package **man** needs to be installed).
 
@@ -186,7 +239,7 @@ Network file system server.
     exportfs -ra
     ```
 
-    Alternatively you can restart the service (`systemctl restart nfs-kernel-server`).
+    Alternatively the service can be restarted (`systemctl restart nfs-server`).
 
     The actual access configuration can be displayed with the command
 
@@ -194,29 +247,60 @@ Network file system server.
     exportfs
     ```
 
-    On the client side you can query the mountable exports with the command
+    On the client side the mountable exports can be queried with the command
 
     ```
     showmount -e <NFS_SERVER>
     ```
 
-=== "Default configuration / increase security"
+=== "Default configuration / limit access"
 
     By default the DietPi NFS installation exports the directory `/mnt/dietpi_userdata` for everyone. This is configured in `/etc/exports.d/dietpi.exports`. You can edit this file to restrict the access.
 
-    E.g. you could limit the access to the NFS share by setting a IP address range:
+    E.g. access to the NFS share can be limited to the IP address range of 192.168.0.1-255, by editing `/etc/exports.d/dietpi.exports` as follows:
 
-    - Edit the following file: `/etc/exports.d/dietpi.exports`
-    - To only allow users access with an IP address range of 192.168.0.1-255
+    ```
+    /mnt/dietpi_userdata 192.168.0.*(rw,async,no_root_squash,crossmnt,no_subtree_check)
+    ```
 
-        ```
-        /mnt/dietpi_userdata 192.168.0.*(rw,async,no_root_squash,fsid=0,crossmnt,no_subtree_check)
-        ```
+    Apply the new configuration via `systemctl restart nfs-server` or `exportfs -ra`.
 
-    - Activate the new configuration (`systemctl restart nfs-kernel-server` or `exportfs -ra`)
+=== "NFS v3 disable/enable"
+
+    One option to disable NFS v3 is to add a file to the directory `/etc/nfs.conf.d/` with the following content:
+
+    ```sh
+    cat << _EOF_ > "/etc/nfs.conf.d/00-dietpi.conf"
+    # Disable NFS v3 (to only have NFS v4 enabled)
+    #
+    [nfsd]
+    vers3=n
+    #vers4=y
+    #vers4.1=y
+    #vers4.2=y
+    _EOF_
+    ```
+
+    A restart of the NFS service is then necessary:
+
+    ```sh
+    systemctl restart nfs-server
+    ```
+
+    The disabled NFS v3 can be examined with:
+
+    ```console
+    root@NFS-server:/etc/nfs.conf.d# cat /proc/fs/nfsd/versions
+    -3 +4 +4.1 +4.2
+    ```
+
+    The example output gives that NFS v3 is not active (-3) whereas NFS v4 is active (+4 +4.1 +4.2).
+
+    To re-enable NFS v3 again, the entry `vers3=y` can be used, or the complete file `/etc/nfs.conf.d/00-dietpi.conf` can be deleted (also restarting the `nfs-server` service afterwards).
 
 ***
 
-Wikipedia: <https://wikipedia.org/wiki/Network_File_System>
+Wikipedia: <https://wikipedia.org/wiki/Network_File_System>  
+DietPi Blog: [DietPi and NFS: Basics and improving security](https://dietpi.com/blog/?p=3581)
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)

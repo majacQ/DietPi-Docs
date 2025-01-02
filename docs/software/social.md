@@ -1,14 +1,22 @@
-# Social / Search
+---
+title: Social and Publishing Software Options
+description: Description of DietPi software options related to social platforms and publishing servers
+---
+
+# Social & Search
 
 ## Overview
 
 - [**FreshRSS - A self-hosted RSS feed aggregator**](#freshrss)
 - [**phpBB - Free flat-forum bulletin board software solution**](#phpbb)
-- [**Wordpress - Website Blog and Publishing platform**](#wordpress)
+- [**WordPress - Website Blog and Publishing platform**](#wordpress)
 - [**Single File PHP Gallery - Host and browse your images from a web interface**](#single-file-php-gallery)
+<!-- markdownlint-disable-next-line MD051 -->
 - [**Baïkal - Lightweight CalDAV + CardDAV server**](#baikal)
-- [**OpenBazaar - Decentralized peer to peer market server using Bitcoin**](#openbazaar)
 - [**Synapse - Decentralized communication with the Matrix protocol**](#synapse)
+- [**microblog.pub - A self-hosted, single-user, ActivityPub powered microblog**](#microblogpub)
+- [**MediaWiki - A collaboration and documentation platform**](#mediawiki)
+- [**soju - A user-friendly IRC bouncer**](#soju)
 
 ??? info "How do I run **DietPi-Software** and install **optimised software** items?"
     To install any of the **DietPi optimised software items** listed below run from the command line:
@@ -22,9 +30,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## FreshRSS
 
@@ -36,7 +44,7 @@ FreshRSS is a self-hosted RSS feed aggregator.
 
     - URL = `<http://<your.IP>/freshrss`
     - Username = `dietpi`
-    - Password = `dietpi`
+    - Password = `<yourGlobalSoftwarePassword>` (default: `dietpi`)
 
 ***
 
@@ -48,7 +56,7 @@ If you always wanted your very own forum, phpBB is all you need.
 
 Also Installs:
 
-- Webserver
+- Webserver, PHP and MariaDB
 
 ![phpBB example forum screenshot](../assets/images/dietpi-software-social-phpbb.png){: width="400" height="298" loading="lazy"}
 
@@ -109,12 +117,16 @@ rm -R /var/www/phpbb/install
 
 Your forum is now ready.
 
-## Wordpress
+***
+
+Official website: <https://www.phpbb.com/>
+
+## WordPress
 
 WordPress is a state-of-the-art semantic personal publishing platform with a focus on aesthetics, web standards, and usability.
 It allows you to create your own website.
 
-![Wordpress logo and usage pictogram](../assets/images/dietpi-software-social-wordpress.jpg){: width="400" height="242" loading="lazy"}
+![WordPress logo and usage pictogram](../assets/images/dietpi-software-social-wordpress.jpg){: width="400" height="242" loading="lazy"}
 
 === "Access to the web interface"
 
@@ -130,13 +142,24 @@ It allows you to create your own website.
     - Database Host = `localhost`
     - Table Prefix = `wp_`
 
+    !!! info "Actively fill all fields!"
+        You need to fill out every dialog field although it seems like they are already set.
+
+        ![WordPress database initialization dialog](../assets/images/dietpi-software-social-wordpress-initialdialog.jpg){: width="350" height="274" loading="lazy"}
+
+        **Remark**: In the example screenshot the global application password is `dietpi`.
+
+***
+
+Official website: <https://wordpress.org/>
+
 ## Single File PHP Gallery
 
 *Single File PHP Gallery* allows you to host and browse your images from a web interface.
 
 Also Installs:
 
-- LASP Webserver
+- Webserver and PHP
 
 ![Single File PHP Gallery web interface screenshot](../assets/images/dietpi-software-social-imagegallery.png){: width="400" height="248" loading="lazy"}
 
@@ -163,11 +186,8 @@ Also Installs:
 
 ***
 
-Website: <https://sye.dk/sfpg>
-
-YouTube video tutorial: *DietPi: Easily set up Raspberry Pi projects (e.g. a shared photo gallery)*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/0by117lpq_o?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
+Official website: <https://sye.dk/sfpg>  
+YouTube video tutorial: [DietPi: Easily set up Raspberry Pi projects (e.g. a shared photo gallery)](https://www.youtube.com/watch?v=0by117lpq_o)
 
 ## Baïkal
 
@@ -196,30 +216,9 @@ Baïkal is a lightweight CalDAV + CardDAV server.
     - Username = `admin`
     - Password = What you set during first run setup above.
 
-## OpenBazaar
+***
 
-OpenBazaar is a free decentralised peer to peer market server for all. No fees. Usage of Bitcoins.  
-Oldschool: Think Napster, but for buying and selling stuff using your Bitcoins.
-
-![OpenBazaar client screenshot](../assets/images/dietpi-software-social-openbazaar.png){: width="400" height="240" loading="lazy"}
-
-=== "OpenBazaar Client"
-
-    The client will allow you to browse and trade, within the OpenBazaar market network.  
-    <https://www.openbazaar.org/download/>
-
-=== "Connecting OpenBazaar Client to your OpenBazaar Server"
-
-    Step 1:  
-    During installation, you will be asked to enter a username, password, and allowed IP address.
-
-    Step 2:  
-    Next, you will need to open the OpenBazaar Client and add your server:
-
-    - Click Menu (top right)
-    - Click New Server
-    - Select Standalone
-    - Enter the IP address of your DietPi device, and, the username and password you applied in step 1.
+Official website: <https://sabre.io/baikal/>
 
 ## Synapse
 
@@ -231,7 +230,8 @@ Synapse is a server, written in Python, for communication using the Matrix proto
 
 === "Federation"
 
-    Synapse is by default set up to be a private server, with no connection to any other servers. To connect to other servers (federate), see https://github.com/matrix-org/synapse/blob/develop/docs/federate.md.  Note that frp does not currently work with Synapse.
+    Synapse is by default set up to be a private server, with no connection to any other servers. To connect to other servers (federate), see <https://github.com/matrix-org/synapse/blob/develop/docs/federate.md>.  
+    Note that [frp](advanced_networking.md#frp) does not currently work with Synapse.
 
 === "Configuration"
 
@@ -263,7 +263,7 @@ Synapse is a server, written in Python, for communication using the Matrix proto
     - Stop: `systemctl stop synapse`
     - Restart: `systemctl restart synapse`
     - Reload config: `systemctl reload synapse`
-    - Print status: `systemctl start synapse`
+    - Print status: `systemctl status synapse`
 
 === "View logs"
 
@@ -284,8 +284,99 @@ Synapse is a server, written in Python, for communication using the Matrix proto
 ***
 
 Official website: <https://matrix.org/>  
-Official documentation: <https://matrix.org/docs/guides>  
+Official documentation: <https://matrix.org/docs/>  
 Source code: <https://github.com/matrix-org/synapse>  
 License: [Apache 2.0](https://github.com/matrix-org/synapse/blob/develop/LICENSE)
 
-[Return to the **Optimised Software list**](../../software/)
+***
+
+## microblog.pub
+
+A self-hosted, single-user, ActivityPub powered microblog.
+
+![microblog.pub blog screenshot](../assets/images/dietpi-software-social-microblogpub1.jpg){: width="400" height="337" loading="lazy"}
+
+=== "Installation / configuration"
+
+    The software installs automatically with a default config. Therefore it is necessary to reconfigure it using the `microblog-pub` script, which loads the environment, and brings up the app's own configuration wizard.  
+    This circumstance is signalled with the following dialog at the end of the installation process:
+
+    ![microblog.pub installation screenshot](../assets/images/dietpi-software-social-microblogpub2.jpg){: width="640" height="142" loading="lazy"}
+
+    To execute this reconfiguration, you can enter the following commands:
+
+    ```sh
+    exec bash
+    ```
+
+    This starts a new bash where you can execute the configuration script
+
+    ```sh
+    microblog-pub configure
+    ```
+ 
+    Remark: You can also easily reboot your system and then execute the `microblog-pub configure` command without the `bash` command before.
+
+    ???+ warning "Setting the port number during the reconfiguration process"
+
+        During the reconfiguration via `microblog-pub configure` you are asked - amongst others - for your domain.  
+        Do not forget to add a `:8007`
+
+=== "Configuration file"
+
+    The `microblog.pub` configuration file is named `profile.toml`  
+    and is located there: `/mnt/dietpi_userdata/microblog-pub/data/profile.toml`.  
+
+    In case of a full reconfiguration you need to delete this file before starting the `microblog-pub configure` command.
+
+***
+
+Official website: <https://sr.ht/~tsileo/microblog.pub/>
+
+## MediaWiki
+
+This collaboration and documentation platform was originally developed for and is used by Wikipedia.
+
+![Restic logo](../assets/images/mediawiki-logo.svg){: width="250" height="250" loading="lazy"}
+
+=== "Quick start"
+
+    MediaWiki is accessible via regular HTTP/HTTPS ports **80**/**443** below the `/wiki` path:
+
+    - URL: `http://<your.IP>/wiki`
+
+    On first access, you need to go through the setup wizard. Enter the following database information:
+
+    1. Database type: `MariaDB, MySQL, or compatible`
+    1. Database host: `localhost`
+    1. Database name: `mediawiki`
+    1. Database table prefix: Since we use a dedicated database, you can leave this empty.
+    1. Database username: `mediawiki`
+    1. Database password: `<your global password>` (default: `dietpi`)
+
+    The next steps allow you to create an admin user to use for subsequent logins and setup wiki details. As last setup step you need to download the generated `LocalSettings.php` and upload it or copy and paste the content to `/var/www/wiki/LocalSettings.php`. When done, you can access your wikis main page, login with the previously created admin user and start creating content.
+
+***
+
+Official website: <https://www.mediawiki.org/wiki/MediaWiki>  
+Source code: <https://github.com/wikimedia/mediawiki>  
+License: [GPLv2](https://github.com/wikimedia/mediawiki/blob/master/COPYING)
+
+## soju
+
+soju is an [IRC bouncer](https://wikipedia.org/wiki/BNC_(software)#IRC) – it connects to upstream IRC servers on your behalf, and then you can connect to it using multiple IRC clients. This causes chat history to be preserved without having to have the IRC client connected all the time.
+
+=== "Quick start"
+
+    By default, soju listens on the **6667** port, which is the default for plain text (insecure) IRC connections.
+
+=== "Configuration file"
+
+    The configuration file is `/mnt/dietpi_userdata/soju/config`. Its structure and configuration options are described in the [soju man page](https://soju.im/doc/soju.1.html).  
+
+***
+
+Official website: <https://soju.im>  
+Source code: <https://git.sr.ht/~emersion/soju>  
+
+[Return to the **Optimised Software list**](../software.md)

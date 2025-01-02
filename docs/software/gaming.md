@@ -1,3 +1,8 @@
+---
+title: Gaming and Emulation Software Options
+description: Description of DietPi software options related to games and userspace emulation
+---
+
 # Gaming & Emulation
 
 ## Overview
@@ -12,6 +17,8 @@
 - [**PaperMC - Fast and optimised Minecraft server**](#papermc)
 - [**Box86 - i386 userspace emulation for ARMv7**](#box86)
 - [**Box64 - x86_64 userspace emulation for ARMv8**](#box64)
+- [**Moonlight (CLI) - CLI game streaming client for Sunshine and NVIDIA GameStream**](#moonlight-cli)
+- [**Moonlight (GUI) - GUI game streaming client for Sunshine and NVIDIA GameStream**](#moonlight-gui)
 
 ??? info "How do I run **DietPi-Software** and install **optimised software** items?"
     To install any of the **DietPi optimised software items** listed below run from the command line:
@@ -25,9 +32,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## OpenTyrian
 
@@ -118,8 +125,14 @@ MineOS allows you to create multiple Minecraft servers with ease, using a simple
 
     - URL: `https://<your.IP>:8443`  
       You can safely ignore the certificate "warning" if one appears.
-    - Username: `root`
-    - Password: The same as your root login password. Default is `dietpi`
+    - Username: `mineos`
+    - Password = `<globalSoftwarePassword>` (default: `dietpi`)
+
+    To change the password to `myPassword`, run the following command:
+
+    ```sh
+    sudo chpasswd --crypt-method SHA512 <<< 'mineos:myPassword'
+    ```
 
 === "1st run setup"
 
@@ -136,6 +149,10 @@ MineOS allows you to create multiple Minecraft servers with ease, using a simple
     9. Click Start
 
     Your server should now be running, on the default port 25565.
+
+    !!! warning "Minecraft Java version requirements"
+        Note that Minecraft 1.20.5 and above requires Java 21, which is available on Debian Trixie/testing only, or with a custom Java installation.  
+        ARMv6 RPi models (RPi 1 and Zero 1) can only run Minecraft 1.16 or older, as newer Java versions do not support ARMv6 with Hotspot VM anymore.
 
 ***
 
@@ -176,8 +193,7 @@ Amiberry is an optimised Amiga emulator for the Raspberry Pi and other ARM-based
 This installation is possible due to a collaboration with Dimitris Panokostas (Amiberry) and Daniel Knight (DietPi).
 
 - Keyboard + mouse is highly recommended.
-- We also offer a completely automated installation image for Amiberry. Please see: <https://blitterstudio.com/amiberry/>.
-- Direct download link: <https://dietpi.com/downloads/images/DietPi_RPi-ARMv6-Bullseye_Amiberry.7z>.
+- We also offer completely automated installation images for Amiberry on Raspberry Pi, which can be found on our download page: <https://dietpi.com/#download>
 
 ![Amiberry logo](../assets/images/dietpi-software-games-amiberry.jpg){: width="400" height="189" loading="lazy"}
 
@@ -193,44 +209,57 @@ This installation is possible due to a collaboration with Dimitris Panokostas (A
       You will need obtain at least one ADF image to start your Amiga experience.  
       Load your ADF from or place them where every you want it, e.g. create and use:  
       `/mnt/dietpi_userdata/amiberry/floppy_images`  
-      To allow uploads via file servers, remember to grant required permissions, e.g.:  
-      `chown dietpi:dietpi /mnt/dietpi_userdata/amiberry/floppy_images`
+      To allow uploads via file servers, remember to grant required permissions, e.g.:
+
+        ```sh
+        chown dietpi:dietpi /mnt/dietpi_userdata/amiberry/floppy_images
+        ```
 
 === "Starting"
 
-    - Amiberry can be started by running: `systemctl start amiberry`
+    - Amiberry can be started by running:
+
+        ```sh
+        systemctl start amiberry
+        ```
+
     - Optionally, you can enable Amiberry autostart to boot straight into the Amiga environment as fast as possible, with the least possible interference from Linux.  
-      Run `dietpi-autostart 6` from console or `dietpi-autostart` and select *Amiberry fast boot* from the menu, then reboot your system.  
-      If you face issues with the fast boot option or need to have other services starting up first, use `dietpi-autostart 8` or select *Amiberry standard boot* respectively.
+      Run `dietpi-autostart 6` from console or `dietpi-autostart` and select **Amiberry fast boot** from the menu, then reboot your system.  
+      If you face issues with the fast boot option or need to have other services starting up first, use `dietpi-autostart 8` or select **Amiberry standard boot** respectively.
 
 === "Create an Amiga configuration"
 
     Once Amiberry is running, you will need to configure the emulator, to tell it which Amiga system to emulate.
 
-    - Select `Quickstart` (from the left hand side menu)
+    - Select **Quickstart** (from the left hand side menu)
     - Under Amiga model: Select the Amiga model you'd like to emulate (example A500)
     - Under Config: Select the additional options for the target Amiga model (if required)
     - Click the Set configuration, button to apply changes.
 
-    Next you will need to setup the emulator for the Kickstart and Floppy disk image you wish to use:
+    Next you will need to setup the emulator for the Kickstart and floppy disk image you wish to use:
 
     - Select a Kickstart (ROM):
-      - On the left hand side, select ROM.
-      - Under Main ROM File:, click the browse button (3 dots) ...
-      - Navigate to your Kickstarts directory  
-        `/mnt/dietpi_userdata/amiberry/kickstarts`  
-        Remark: Amiberry does not currently support symbolic links. If you have a dedicated USB drive installation, the location is:  
-        `/mnt/uuid-of-drive/amiberry/kickstarts`
-      - Select a Kickstart (1.3 is recommended)
+        - On the left hand side, select **ROM**.
+        - Under **Main ROM File:**, select the browse button (3 dots) ...
+        - Navigate to your Kickstarts directory:  
+          `/mnt/dietpi_userdata/amiberry/kickstarts`\*
+        - Select the Kickstart (1.3 is recommended) you wish to use.
 
     - Select a Floppy disk image (ADF):
-      - On the left hand side, select Floppy drives.
-      - Under `DF0:`, select the browse button the right hand side (3 dots) ...
-      - Navigate to your Floppy image directory, e.g.   
-        `/mnt/dietpi_userdata/amiberry/floppy_images`  
-        Remark: Amiberry does not currently support symbolic links. If you have a dedicated USB drive installation, the location is:  
-        `/mnt/uuid-of-drive/amiberry/floppy_images`
-      - Select the ROM you wish to use.
+        - On the left hand side, select **Floppy drives**.
+        - Under `DF0:`, select the browse button (3 dots) ...
+        - Navigate to your floppy image directory:  
+          `/mnt/dietpi_userdata/amiberry/floppy_images`\*
+        - Select the ROM you wish to use.
+
+    \* Remark: Amiberry does not currently support symbolic links. If you moved DietPi userdata to an external drive, run the following command to derive it's actual path:  
+
+    ```sh
+    readlink -f /mnt/dietpi_userdata/amiberry
+    ```
+
+    With `dietpi-drive_manager`'s default mount point it looks like:  
+    `/mnt/<UUID>/dietpi_userdata/amiberry`
 
 === "Enable fullscreen output"
 
@@ -241,9 +270,9 @@ This installation is possible due to a collaboration with Dimitris Panokostas (A
 
     This will emulate the Amiga as fast as possible, ensuring you get the maximum FPS for your SBC hardware.
 
-    - On the left hand side, select CPU and FPU.
+    - On the left hand side, select **CPU and FPU**.
     - Under CPU Speed, select the fastest option.
-    - If you find this change slows down the emulation, try using the fixed value of 25 MHz
+    - If you find this change slows down the emulation, try using the fixed value of **25 MHz**.
 
 === "Optional: Save configuration (recommended)"
 
@@ -252,25 +281,33 @@ This installation is possible due to a collaboration with Dimitris Panokostas (A
     - On the left hand side, select **Configurations**.
     - Enter the name, e.g. "autostart", then click **Save**.
 
+=== "Update"
+
+    To update Amiberry to the latest version, simply reinstall it:
+
+    ```sh
+    dietpi-software reinstall 108
+    ```
+
 === "FAQ"
 
-    #### How can I transfer Kickstarts & Floppy Images to the device?
+    <h4>How can I transfer Kickstarts & Floppy Images to the device?</h4>
 
     Make sure you have one of DietPi's File Servers installed.
 
     - Floppy Disk Image (`.adf`) directory as chosen before, e.g. `/amiberry/floppy_images`
     - Kickstarts (`.rom`) directory = `/amiberry/kickstarts`
 
-    #### How can I open the configuration window once the emulator has started?
+    <h4>How can I open the configuration window once the emulator has started?</h4>
 
     The pre-defined key for that is ++f12++.
 
-    #### How can I reboot the Amiga emulation environment (Amiga reset)?
+    <h4>How can I reboot the Amiga emulation environment (Amiga reset)?</h4>
 
     Use ++ctrl+lwin+rwin++ keys.  
     If you don't have an ++rwin++ key, try using the ++menu++ key instead.
 
-    #### What are the default controls for Joystick, when using a Keyboard?
+    <h4>What are the default controls for Joystick, when using a Keyboard?</h4>
 
     When using a keyboard, the default joystick controls are:
 
@@ -278,49 +315,44 @@ This installation is possible due to a collaboration with Dimitris Panokostas (A
     - ++page-down++ = Fire/Button 1
     - ++page-up++ = Fire/Button 2
 
-    #### How can I improve performance (frame rate)?
+    <h4>How can I improve performance (frame rate)?</h4>
 
     A ***lower resolution*** may improve performance on most games. From the emulator main menu:
 
-    - On the left hand side, select Display
-    - 640x256 is high resolution
-    - 320x256 is low resolution and should provide improved performance
+    - On the left hand side, select **Display**.
+    - **640x256** is high resolution.
+    - **320x256** is low resolution and should provide improved performance.
 
     ***Overclocking*** your system will improve performance. Stability may vary across devices and overclocking is not officially supported:  
 
-    - From a terminal, run `dietpi-config`
-    - Select the Performance Options menu
-    - Select Overclocking Profiles
-    - Select an overclocking profile, then reboot the system
+    - From a terminal, run `dietpi-config`.
+    - Select the **Performance Options** menu.
+    - Select **Overclocking**.
+    - Select an overclocking profile, then `reboot` the system to apply the change.
 
-    #### How do i set the floppy drive speed for compatibility?
+    <h4>How do I set the floppy drive speed for compatibility?</h4>
 
-    Floppy drive emulation is to set to "800 %" by default. This reduces loading times by up to 8x.  
-    You can lower this to 100 %, increasing compatibility:
+    Floppy drive emulation is to set to **800 %** by default. This reduces loading times by up to 8x.  
+    You can lower this to **100 %**, increasing compatibility:
 
-    - On the left hand side, select Floppy Drives
-    - Change the Floppy Drive Emulation Speed value to 100 %
+    - On the left hand side, select **Floppy drives**.
+    - Change the Floppy Drive Emulation Speed value to **100 %**.
 
-    #### Some games are not in full screen
+    <h4>Some games are not in full screen</h4>
 
     Games run at various resolutions, from the emulator main menu:
 
-    - On the left hand side, select Display
-    - Change the Height value to 200 or 256
-    - Press the Resume or Start button
+    - On the left hand side, select **Display**.
+    - Change the **Height** value to **200** or **256**.
+    - Press the **Resume** or **Start** button.
 
-    If you find this installation useful, please donate. Use the below link and select **Donate for DietPi and Amiberry 50:50** to have it split between Dimitris Panokostas (Amiberry) and DietPi.  
-    [PayPal Donate](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6DVBECXRW3TAA)
-
-**Good to GO!**  
+### Good to GO
+  
 When ready, select **Start** to launch the emulator. Have fun!
 
 ***
 
-YouTube video tutorial #1: *Amiga on the Raspberry Pi with DietPi and Amiberry: I got the Pi 400 to work!*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/osBU7iVSQ78?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
-
+YouTube video tutorial #1: [Amiga on the Raspberry Pi with DietPi and Amiberry: I got the Pi 400 to work!](https://www.youtube.com/watch?v=osBU7iVSQ78)  
 YouTube video tutorial #2: [Amiga on the Raspberry Pi with DietPi and Amiberry: Workbench and Autobooting](https://www.youtube.com/watch?v=LU-G0PRNffQ)
 
 ## DXX-Rebirth
@@ -467,7 +499,7 @@ PaperMC by default runs a single server, available on LAN, but can be port forwa
 
 ***
 
-Official website: <https://paper.readthedocs.io>  
+Official website: <https://docs.papermc.io/paper/admin>  
 Source code: <https://github.com/PaperMC/Paper>
 
 ## Box86
@@ -478,4 +510,98 @@ Box86 lets you run **i386** Linux programs (such as games) on **ARMv7** systems.
 
 Box64 lets you run **x86_64** Linux programs (such as games) on **ARMv8** systems. Thanks to [binfmt_misc](https://en.wikipedia.org/wiki/Binfmt_misc), which is enabled by default, you can execute **x86_64** binaries like every other executable and Box64 is invoked automatically.
 
-[Return to the **Optimised Software list**](../../software/)
+## Moonlight (CLI)
+
+Moonlight is a game streaming client for [Sunshine](https://github.com/LizardByte/Sunshine) and NVIDIA GameStream streaming servers. This section is about the CLI variant of Moonlight, aka Moonlight Embedded.
+
+=== "Quick start"
+
+    After the installation, you need to pair your Moonlight with the streaming server with the following command:
+
+    ```sh
+    moonlight pair
+    ```
+
+    This attempts to auto-detect compatible streaming servers in your network. If this fails, you can add the hostname or IP address manually. In this example `192.168.0.1` is the IP of a Sunshine streaming server:
+
+    ```sh
+    moonlight pair 192.168.0.1
+    ```
+
+    Moonlight will print a 4-digit PIN to the console which you need to enter into the streaming server's UI to finish pairing. Then you can start streaming, in this simple example the current desktop session of the streaming server:
+
+    ```sh
+    moonlight stream -app=Desktop 192.168.0.1
+    ```
+
+    To make configuration and startup of Moonlight simpler, you can edit the config file `/etc/moonlight.conf` accordingly, enter streaming server host, app and other settings, and then start Moonlight using this config file:
+
+    ```sh
+    moonlight /etc/moonlight.conf
+    ```
+
+    !!! tip "To quit streaming and exit Moonlight, press ++ctrl+alt+shift+q++."
+
+=== "Update"
+
+    Since Moonlight is installed from an APT repository, updates will be offered via APT:
+
+    ```sh
+    apt Update
+    apt install moonlight-embedded
+    ```
+
+***
+
+Official website: <https://moonlight-stream.org/>  
+Official documentation: <https://github.com/moonlight-stream/moonlight-embedded/wiki/Usage>  
+Source code: <https://github.com/moonlight-stream/moonlight-embedded>  
+License: [GPLv3](https://github.com/moonlight-stream/moonlight-embedded/blob/master/LICENSE)
+
+## Moonlight (GUI)
+
+Moonlight is a game streaming client for [Sunshine](https://github.com/LizardByte/Sunshine) and NVIDIA GameStream streaming servers. This section is about the GUI variant of Moonlight, aka Moonlight Qt or Moonlight PC.
+
+=== "Quick start"
+
+    The Moonlight GUI can be started with the following command:
+
+    ```sh
+    moonlight-qt
+    ```
+
+    When doing this via SSH or from plain console outside of a desktop session, we observed that it can show a disturbing black border at the top of the screen, covering important parts of the GUI. If happens, it is best to start it from a terminal emulation within a desktop session.
+
+    On first start, it will search for and list compatible streaming servers on your network. If this does not work for some reason, you can enforce with a streaming server, using its IP address or hostname. In this example `192.168.0.1` is the IP of a Sunshine streaming server:
+
+    ```sh
+    moonlight-qt pair 192.168.0.1
+    ```
+
+    The GUI will show a 4-digit PIN which you need to enter into the streaming server's UI to finish pairing. Then streaming can be started by selecting an available app.
+
+    You can also quick start streaming of a specific app from a specific host. In this simple example the current desktop session of the streaming server is streamed, skipping the Moonlight GUI:
+
+    ```sh
+    moonlight-qt stream 192.168.0.1 Desktop
+    ```
+
+    !!! tip "To quit streaming, press ++ctrl+alt+shift+q++. To exit the Moonlight GUI, simply hit ++q++."
+
+=== "Update"
+
+    Since Moonlight is installed from an APT repository, updates will be offered via APT:
+
+    ```sh
+    apt Update
+    apt install moonlight-qt
+    ```
+
+***
+
+Official website: <https://moonlight-stream.org/>  
+Official documentation: <https://github.com/moonlight-stream/moonlight-docs/wiki/Setup-Guide>  
+Source code: <https://github.com/moonlight-stream/moonlight-qt>  
+License: [GPLv3](https://github.com/moonlight-stream/moonlight-qt/blob/master/LICENSE)
+
+[Return to the **Optimised Software list**](../software.md)

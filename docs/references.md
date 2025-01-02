@@ -1,7 +1,12 @@
+---
+title: External references and articles
+description: Read external references, articles and watch videos and guides about DietPi
+---
+
 # References
 
 At this page, links to general information are referenced.  
-Links to special software packages are located at the end of the according software package description in the "Optimized Software" documentation area.
+Links to special software packages are located at the end of the according software package description in the [Optimised Software](software.md) documentation area.
 
 ## General links
 
@@ -11,9 +16,9 @@ Links to special software packages are located at the end of the according softw
 
 ## General articles
 
-- Raspberry Pi Foundation: [DietPi | Minimal image, highly extensible](https://www.raspberrypi.org/forums/viewtopic.php?t=285096)
-- Hardkernel ODROID: [[OS] DietPi | Minimal image, highly extensible](https://forum.odroid.com/viewtopic.php?t=40392)
-- PC Welt (German language): [DietPi ist erste Wahl für Headlessplatinen](https://www.pcwelt.de/a/diet-pi-ist-erste-wahl-fuer-headlessplatinen,3452321){:class="nospellcheck"}
+- Raspberry Pi Foundation: [DietPi | Minimal image, highly extensible](https://forums.raspberrypi.com/viewtopic.php?t=285096)
+- Hardkernel ODROID: [\[OS\] DietPi | Minimal image, highly extensible](https://forum.odroid.com/viewtopic.php?t=40392)
+- PC-WELT (German language): [Diet Pi ist erste Wahl für Headlessplatinen](https://www.pcwelt.de/article/1172801){:class="nospellcheck"}
 - Raspberry Pi GEEK (German language): [Schlankes Raspbian-Derivat DietPi](https://www.raspberry-pi-geek.de/ausgaben/rpg/2017/10/schlankes-raspbian-derivat-dietpi/){:class="nospellcheck"}
 - `Onkel Jordi` (German language): [DietPi: Klein, schlank und schnell (2019)](https://onkeljordi.de/2019/01/dietpi-klein-schlank-und-schnell-2019/){:class="nospellcheck"}
 - `DMW007` (German language): [DietPi – Das bessere Rapsberry Pi OS? DietPi Betriebssystem vorgestellt: DietPi vs. Raspberry Pi OS](https://u-labs.de/portal/dietpi-das-bessere-rapsberry-pi-os-dietpi-betriebssystem-vorgestellt-dietpi-vs-raspberry-pi-os/){:class="nospellcheck"}

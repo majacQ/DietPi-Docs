@@ -1,0 +1,75 @@
+name: Build test and quality checks
+on: [pull_request, push]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions: { contents: read }
+jobs:
+  main:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login != github.event.pull_request.base.repo.owner.login
+    # https://github.com/actions/runner-images
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Clone DietPi-Docs repository
+      id: clone
+      uses: actions/checkout@v4
+    - name: Setup Node.js for markdownlint-cli2
+      uses: actions/setup-node@v4
+      with:
+        node-version: '*'
+        check-latest: true
+    - name: Install markdownlint-cli2
+      run: sudo npm i -g markdownlint-cli2
+    - name: Run markdownlint-cli2 to check Markdown files
+      run: markdownlint-cli2 '**.md'
+    - name: Setup Python for MkDocs and PySpelling
+      id: python
+      if: always() && steps.clone.outcome == 'success'
+      uses: actions/setup-python@v5
+      with:
+        # Match version on dietpi.com server
+        python-version: '3.12.4'
+    - name: Install MkDocs
+      id: mkdocs
+      if: always() && steps.python.outcome == 'success'
+      run: |
+        pip3 install -U pip wheel setuptools
+        pip3 install -Ur requirements.txt
+    - name: Build DietPi-Docs
+      id: build
+      if: always() && steps.mkdocs.outcome == 'success'
+      run: mkdocs build -sd build/docs
+    - name: Install PySpelling
+      id: pyspelling
+      if: always() && steps.build.outcome == 'success'
+      run: |
+        pip3 install -U pyspelling &
+        sudo apt-get -q update
+        sudo apt-get -qq --no-install-recommends install aspell-en
+    - name: Run PySpelling to check HTML files
+      if: always() && steps.pyspelling.outcome == 'success'
+      run: pyspelling -c .spellcheck.yml
+    - name: Download lychee
+      id: lychee
+      # Skip on push events into master
+      if: always() && steps.build.outcome == 'success' && ! endsWith(github.ref, '/master')
+      run: |
+        # Workaround for broken local link checks in v0.17.0: https://github.com/lycheeverse/lychee/issues/1574
+        #curl -sSfL "$(curl -sSfH 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' 'https://api.github.com/repos/lycheeverse/lychee/releases/latest' | mawk -F\" '/"browser_download_url.*x86_64-unknown-linux-musl\.tar\.gz"/{print $4;exit}')" -o lychee.tar.gz
+        curl -sSfL 'https://github.com/lycheeverse/lychee/releases/download/lychee-v0.16.1/lychee-x86_64-unknown-linux-musl.tar.gz' -o lychee.tar.gz
+        tar xf lychee.tar.gz
+    - name: Run lychee to check README and HTML files
+      if: always() && steps.lychee.outcome == 'success'
+      # "429 Too Many Requests" on GitHub despite token
+      # Exclude URLs for newly added Markdown files as well as raw view and edit GitHub URLs for all existing Markdown files
+      # parallels.com|chromewebstore.google.com: Cloudflare lets client enter redirect loop, if it does not send a cookie, set in response.
+      # raspberrypi.com|www.reddit.com|superuser.com|twitter.com/DietPi_|www.patreon.com/DietPi: Network error: Forbidden
+      # www.wireguard.com: Regularly Timeout
+      # www.domoticz.com: Protected by Cloudflare CAPTCHA
+      # github.com/MichaIng/: Even with GITHUB_TOKEN or a PAT, checks run into 403 and timeouts. Hence skip checks on own repositories, which we expect to remain valid.
+      run: |
+        git fetch --depth=1 origin master
+        while read -r line; do exclude="$exclude|dietpi.com/${line%.md}/"; done < <(git diff --name-only --diff-filter=A origin/master docs | grep '.md$')
+        while read -r line; do exclude="$exclude|github.com/MichaIng/DietPi-Docs/(raw|edit)/dev/$line"; done < <(find docs -type f -name '*.md')
+        #curl -sSfH 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' -X GET 'https://api.github.com/rate_limit'
+        ./lychee -En --require-https --cache --include-fragments --exclude '^(http://wiringpi.com/$|https://(github.com/MichaIng/|www.wireguard.com/$|twitter.com/DietPi_$|www.patreon.com/DietPi$|www.linux-kvm.org/$|www.domoticz.com/|pydio.com/|www.spigotmc.org/|help.realvnc.com/|help.roonlabs.com/|blynk.io/|play.google.com/store/apps/details|www.kickstarter.com|theunarchiver.com/$|www.parallels.com/|(www|forums).raspberrypi.com/|www.reddit.com/|superuser.com|chromewebstore.google.com'"$exclude"'))' -a 429 --github-token '${{ secrets.GITHUB_TOKEN }}' -b build README.md 'build/**/*.html'

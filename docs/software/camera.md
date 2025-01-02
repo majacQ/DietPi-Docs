@@ -1,9 +1,14 @@
+---
+title: Camera and Surveillance Software Options
+description: Description of DietPi software options related to camera and surveillance
+---
+
 # Camera & Surveillance
 
 ## Overview
 
-- [**RPi Cam Control - Web interface & controls for your RPi camera**](#rpi-cam-control)
-- [**MotionEye - Web interface & surveillance for your camera**](#motioneye)
+- [**RPi Cam Web Interface - Web interface & controls for your RPi camera**](#rpi-cam-web-interface)
+- [**motionEye - Web interface & surveillance for your camera**](#motioneye)
 - [**mjpg-streamer - Simple camera streaming tool with HTML plugin**](#mjpg-streamer)
 
 ??? info "How do I run **DietPi-Software** and install **optimised software** items?"
@@ -18,13 +23,13 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
-## RPi Cam Control
+## RPi Cam Web Interface
 
-The *RPi Cam Control* package can be used in combination with a Raspberry Pi camera module to
+The *RPi Cam Web Interface* package can be used in combination with a Raspberry Pi camera module to
 
 - take an image
 - record a video
@@ -33,7 +38,7 @@ The *RPi Cam Control* package can be used in combination with a Raspberry Pi cam
 
 It consists of full control of the camera in a web-based interface.
 
-![RPi Cam Control web interface screenshot](../assets/images/dietpi-software-camera-rpicamcontrol.png){: width="500" height="395" loading="lazy"}
+![RPi Cam Web Interface screenshot](../assets/images/dietpi-software-camera-rpicamcontrol.png){: width="500" height="395" loading="lazy"}
 
 === "Access the web interface"
 
@@ -43,15 +48,15 @@ It consists of full control of the camera in a web-based interface.
 
 === "Access recordings (w/o web interface)"
 
-    To access you recordings remotely without the web interface, you might want to have one of [DietPi's file servers](../file_servers/) installed.  
-    Directories used by MotionEye:
+    To access you recordings remotely without the web interface, you might want to have one of [DietPi's file servers](file_servers.md) installed.  
+    Directories used by RPi Cam Web Interface:
 
     - Media directory = `/mnt/dietpi_userdata/rpicam`
     - Accessed from file server = `/rpicam`
 
 === "Update to latest version"
 
-    RPi Cam Control can be updated to the latest version by reinstalling it via
+    RPi Cam Web Interface can be updated to the latest version by reinstalling it via
 
     ```sh
     dietpi-software reinstall 59
@@ -72,9 +77,9 @@ Github page: <https://github.com/silvanmelchior/RPi_Cam_Web_Interface>
 Wiki: <https://elinux.org/RPi-Cam-Web-Interface>  
 License: [MIT](https://github.com/silvanmelchior/RPi_Cam_Web_Interface/blob/master/LICENSE.txt)
 
-## MotionEye
+## motionEye
 
-The *MotionEye* package offers surveillance for your camera.  
+The *motionEye* package offers surveillance for your camera.  
 It is mainly focused towards motion detection usage. It contains a web interface.
 
 The software can
@@ -86,7 +91,7 @@ The software can
 
 from any RPi camera, USB camera or an IP camera network stream.
 
-![MotionEye web interface screenshot](../assets/images/dietpi-software-camera-motioneye.png){: width="500" height="246" loading="lazy"}
+![motionEye web interface screenshot](../assets/images/dietpi-software-camera-motioneye.png){: width="500" height="246" loading="lazy"}
 
 === "Access the web interface"
 
@@ -100,18 +105,18 @@ from any RPi camera, USB camera or an IP camera network stream.
 
 === "Access recordings (w/o web interface)"
 
-    To access you recordings remotely without the web interface, you might want to have one of [DietPi's file servers](../file_servers/) installed.  
-    Directories used by MotionEye:
+    To access you recordings remotely without the web interface, you might want to have one of [DietPi's file servers](file_servers.md) installed.  
+    Directories used by motionEye:
 
     - Media directory = `/mnt/dietpi_userdata/motioneye`
     - Accessed from file server = `/motioneye`
 
 === "Update to latest version"
 
-    MotionEye can be updated to the latest version via
+    motionEye can be updated to the latest version via
 
     ```sh
-    sudo pip2 install -U motioneye
+    sudo pip3 install -U --pre motioneye
     ```
 
 === "RPi camera module"
@@ -127,11 +132,8 @@ from any RPi camera, USB camera or an IP camera network stream.
 
 Github page: <https://github.com/ccrisan/motioneye>  
 Wiki: <https://github.com/ccrisan/motioneye/wiki>  
-Tutorial: [MotionEye on DietPi on Raspberry Pi: keeping an eye on things](https://mansfield-devine.com/speculatrix/2018/12/motioneye-on-dietpi-on-raspberry-pi/)  
-YouTube video tutorial (German language): `DietPi & MotionEye - Vollautomatische Installation inkl. Wlan Konfiguration, Updates und Anwendung`.
-
-<iframe src="https://www.youtube-nocookie.com/embed/vQxL3TfQK5E?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
-
+Tutorial: [motionEye on DietPi on Raspberry Pi: keeping an eye on things](https://mansfield-devine.com/speculatrix/2018/12/motioneye-on-dietpi-on-raspberry-pi/)  
+YouTube video tutorial (German language): [DietPi & motionEye - Vollautomatische Installation inkl. Wlan Konfiguration, Updates und Anwendung](https://www.youtube.com/watch?v=vQxL3TfQK5E){:class="nospellcheck"}  
 License: [GPLv3](https://github.com/ccrisan/motioneye/blob/dev/LICENSE)
 
 ## mjpg-streamer
@@ -150,11 +152,11 @@ Stream JPEG frames from various sources to various possible outputs. With the de
 
 === "Setup for OctoPrint"
 
-    When [OctoPrint](../printing/#octprint) is installed, it will be automatically configured to use the mjpg-streamer HTTP stream and snapshots, as this is the major use case this software title was requested for. You can review and test the setup from within the OctoPrint web interface settings.
+    When [OctoPrint](printing.md#octoprint) is installed, it will be automatically configured to use the mjpg-streamer HTTP stream and snapshots, as this is the major use case this software title was requested for. You can review and test the setup from within the OctoPrint web interface settings.
 
 === "HTML authentication"
 
-    By default, the HTTP stream is accessible on port **8082** without any authentication. This is required when you embed it into [OctoPrint](../printing/#octprint), since the browser sends the request and cannot pass credentials currently. If you however use the stream otherwise, especially when you expose it to the world-wide-web, we recommend to setup a password. For this:
+    By default, the HTTP stream is accessible on port **8082** without any authentication. This is required when you embed it into [OctoPrint](printing.md#octoprint), since the browser sends the request and cannot pass credentials currently. If you however use the stream otherwise, especially when you expose it to the world-wide-web, we recommend to setup a password. For this:
 
     1. Run `dietpi-services`
     2. Select `mjpg-streamer`
@@ -225,4 +227,4 @@ Github page: <https://github.com/jacksonliam/mjpg-streamer>
 Plugin docs: <https://github.com/jacksonliam/mjpg-streamer/tree/master/mjpg-streamer-experimental>  
 License: [GPLv2](https://github.com/jacksonliam/mjpg-streamer#license)
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)

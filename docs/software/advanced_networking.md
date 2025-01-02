@@ -1,3 +1,8 @@
+---
+title: Advanced Networking Software Options
+description: Description of DietPi software options related to networking
+---
+
 # Advanced Networking
 
 ## Overview
@@ -19,9 +24,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## WiFi HotSpot
 
@@ -33,7 +38,7 @@ The WiFi HotSpot package turns your device into a wireless hotspot/access point.
 
     The requirements are:
 
-    - 1x Ethernet connection
+    - 1x Ethernet connection (LAN)
     - 1x Supported USB WiFi adapter or onboard WiFi. This may vary depending on device and available WiFi drivers/modules. However, common adapters (e.g.: Atheros) should be fine.
 
 === "Initial connection credentials"
@@ -43,7 +48,12 @@ The WiFi HotSpot package turns your device into a wireless hotspot/access point.
     - SSID = `DietPi-HotSpot`
     - Access Key = `dietpihotspot`
 
-=== "Change WiFi HotSpot settings"
+=== "Change hotspot settings"
+
+    Some hotspot settings can be changed to adopt to various circumstances. The main settings of the WiFi hotspot reside in the DHCP configuration file `/etc/dhcp/dhcpd.conf` and can be edited. The DHCP server configuration options are manifold and can be checked out e.g. via the [man pages of `isc-dhcp-server`](https://manpages.debian.org/testing/isc-dhcp-server/dhcpd.conf.5.en.html).  
+    Below there are some basic settings described.
+
+    <h3>Change WiFi settings (SSID/Key/Channel)</h3>
 
     Once installed, you can change the WiFi HotSpot settings (SSID/Key/Channel) at any time:
 
@@ -51,11 +61,149 @@ The WiFi HotSpot package turns your device into a wireless hotspot/access point.
     2. Navigate to *Networking Options: Adapters*, then select *WiFi*
     3. Whilst in this menu, it is highly recommended you set the Country Code to your country. Depending on your country regulations, this could allow for channels 12/13 and increased power output (range) for the hotspot
 
+    <h3>Change hotspot subnet address</h3>
+
+    The WiFi hotspot offer the WiFi clients IP settings within a certain IP subnet (see lower part of graphics):
+
+    ![DietPi WiFi hotspot structure](../assets/images/dietpi-software-advanced-networking-wifihotspot-address-setting.png){: width="550" height="345" loading="lazy"}
+
+    The default values for these subnet settings are:
+
+    - IP address of WiFi hotspot: 192.168.**42.1**
+    - Subnet mask: 255.255.255.0
+    - DHCP range: 192.168.**42.10** .. 192.168.**42.250**
+
+    If these settings shall be changed, the following files need to be adjusted:
+
+    - `/etc/dhcp/dhcp.conf`
+    - `/etc/network/interfaces`
+    - `/etc/iptables.ipv4.nat`
+
+    These changes should be followed by a reboot to activate the settings (this is an easy way compared to restart the relevant services by hand).
+
+    For example, the default contents of the WiFi setting area within the file `/etc/network/interfaces` is:
+
+    ```
+    # WiFi
+    allow-hotplug wlan0
+    iface wlan0 inet static
+    address 192.168.42.1
+    netmask 255.255.255.0
+    #gateway 192.168.0.1
+    #dns-nameservers 9.9.9.9 149.112.112.112
+    wireless-power off
+    ```
+
+    As can be seen, the address 192.168.42.1 would need to be changed.
+
+    These setting changes can be done by hand or via a shell line using this command  
+    (exemplary changing IP addresses from 192.168.**42.x** to 192.168.**43.x**): 
+    
+    ```sh
+    sed -i 's/192\.168\.42\./192.168.43./g' /etc/dhcp/dhcpd.conf /etc/network/interfaces /etc/iptables.ipv4.nat
+    ```
+
+    <h3>Change DHCP lease time settings</h3>
+
+    The DHCP lease time denotes the time how long an IP address is bound to a DHCP client: DHCP-assigned IP addresses are typically not permanent and expire after a certain time. This time is called *DHCP lease time*.  
+    This lease time can be set, so that an IP address is not dedicated to a device forever and is available for other devices too, when needed.
+
+    The lease time is set via the entry `default-lease-time` within the configuration file `/etc/dhcp/dhcpd.conf`.
+
+    There are many further setting options around the lease behaviour, for details e.g. see [man pages of `isc-dhcp-server`](https://manpages.debian.org/testing/isc-dhcp-server/dhcpd.conf.5.en.html).
+
+    The default-lease-time time of the `isc-dhcp-server` is 43200 seconds (12 hrs). Depending of the usage situation of the WiFi hotspot, a different setting might fit better.  
+    Typical good practice values are:
+
+    - Internet cafe: 1 hour resp. 3600 seconds
+    - Guest networks in an office: 8 hours resp. 28800 seconds
+    - Wireless devices at trusted networks / at home: 24 hours .. 1 week resp. 86.400 .. 604.800 seconds
+    - (Cable connected devices / LAN: 8 days resp. 691.200 seconds)
+
+=== "Diagnosis"
+
+    The status of the WiFi hotspot can be evaluated with these commands:
+
+    - 
+
+        ```sh
+        systemctl status isc-dhcp-server hostapd
+        ```
+
+    - 
+    
+        ```sh
+        journalctl -u isc-dhcp-server
+        ```
+
+        resp.  
+
+        ```sh
+        journalctl -u isc-dhcp-server -u hostapd -u ifup@wlan0
+        ```
+
+
+    Additionally, DHCP leases can be monitored via the file `/var/lib/dhcp/dhcpd.leases`. 
+
+=== "Combine with AdGuard Home resp. Pi-hole"
+
+    The WiFi HotSpot can be combined with AdGuard Home resp. Pi-hole. To do this, the DHCP server needs to know the IP address of the Ad-Blocker system and announces it as the DNS server for the WiFi area.
+
+    The corresponding file is `/etc/dhcp/dhcpd.conf`, the entry `option domain-name-servers` has to be set to your Ad-Blocker IP address.  
+    In the following there are three examples given starting from the following base `dhcpd.conf` content:
+
+    ```
+    authoritative;
+    #default-lease-time 43200;
+    #max-lease-time 86400;
+
+    subnet 192.168.42.0 netmask 255.255.255.0 {
+        range 192.168.42.10 192.168.42.250;
+        option broadcast-address 192.168.42.255;
+        option routers 192.168.42.1;
+        option domain-name "local";
+        option domain-name-servers 9.9.9.9, 149.112.112.112;
+    }
+    ```
+
+    1. AdGuard Home runs on the same DietPi system as the WiFi HotSpot runs. Then the "subnet" section contents has to be changed to
+        ```
+        subnet 192.168.42.0 netmask 255.255.255.0 {
+            range 192.168.42.10 192.168.42.250;
+            option broadcast-address 192.168.42.255;
+            option routers 192.168.42.1;
+            option domain-name "local";
+            # AdGuard Home runs on the localhost (with IP address 192.168.42.1)
+            option domain-name-servers 192.168.42.1;
+        }
+        ```
+
+    1. Pi-hole runs in the subnet the (superimposed) LAN connection belongs to. Depending on the LAN subnet (e.g. 192.168.178.0/24) the "subnet" section contents might be changed to
+        ```
+        subnet 192.168.42.0 netmask 255.255.255.0 {
+            range 192.168.42.10 192.168.42.250;
+            option broadcast-address 192.168.42.255;
+            option routers 192.168.42.1;
+            option domain-name "local";
+            # Pi-hole runs on the LAN (with IP address 192.168.178.2)
+            option domain-name-servers 192.168.178.2;
+        }
+        ```
+
+    1. Pi-hole runs in the subnet the WiFi connection belongs to. Depending on the WiFi HotSpot subnet (e.g. 192.168.42.0/24) the "subnet" section contents might be changed to
+        ```
+        subnet 192.168.42.0 netmask 255.255.255.0 {
+            range 192.168.42.10 192.168.42.250;
+            option broadcast-address 192.168.42.255;
+            option routers 192.168.42.1;
+            # Pi-hole runs on the WiFi subnet (with IP address 192.168.42.250)
+            option domoption domain-name-servers 192.168.42.250;
+        }
+        ```
+
 ***
 
-YouTube video tutorial (German language): `Raspberry Hotspot: Internet Sperren umgehen mit eigenen WiFi Hotspot unter DietPi (für alle Geräte)`.
-
-<iframe src="https://www.youtube-nocookie.com/embed/3ZROq90tM_s?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
+YouTube video tutorial (German language): [Raspberry Hotspot: Internet Sperren umgehen mit eigenen WiFi Hotspot unter DietPi (für alle Geräte)](https://www.youtube.com/watch?v=3ZROq90tM_s){:class="nospellcheck"}
 
 ## Tor HotSpot
 
@@ -64,7 +212,7 @@ This is perfect for users requiring anonymity and privacy.
 
 It also Installs:
 
-- [WiFi HotSpot](#wifi-hotspot_1)
+- [WiFi HotSpot](#wifi-hotspot)
 
 ![DietPi WiFi hotspot tor](../assets/images/dietpi-software-advanced-networking-torhotspot.png){: width="550" height="308" loading="lazy"}
 
@@ -77,7 +225,7 @@ It also Installs:
 
 === "Connection credentials"
 
-    These are identical to the [WiFi HotSpot credentials](#wifi-hotspot_1).
+    These are identical to the [WiFi HotSpot credentials](#wifi-hotspot).
 
 === "Verification"
 
@@ -95,9 +243,7 @@ It also Installs:
 ***
 
 Wikipedia: <https://wikipedia.org/wiki/Tor_(anonymity_network)>  
-YouTube video tutorial: *DietPi Tor Hotspot Setup on Raspberry Pi 3 B Plus*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/rik-ABzSoHM?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
+YouTube video tutorial: [DietPi Tor Hotspot Setup on Raspberry Pi 3 B Plus](https://www.youtube.com/watch?v=rik-ABzSoHM)
 
 ## HAProxy
 
@@ -122,8 +268,9 @@ It is best suited for high traffic web sites and powers quite a number of the wo
     The stats web interface is accessible via port **1338**:
 
     - URL = `http://<your.IP>:1338`
+    - Prometheus metrics = `http://<your.IP>:1338/metrics`
     - Username = `admin`
-    - Password = `dietpi`
+    - Password = `<yourGlobalSoftwarePassword>` (default: `dietpi`)
 
     !!! hint "This installation was made possible by Jerome Queneuder, who provided the methods for compiling and installation."
 
@@ -149,7 +296,7 @@ It is best suited for high traffic web sites and powers quite a number of the wo
 ***
 
 Website: <https://www.haproxy.org/>  
-Official documentation: <https://www.haproxy.org/#docs>
+Official documentation: <https://docs.haproxy.org/>
 
 ## frp
 
@@ -168,8 +315,8 @@ A fast reverse proxy, helping you to expose a local server behind a NAT or firew
 
     Depending on whether you have installed as client, server, or both, there will be only the configuration files for that component.
 
-    - Client: `/etc/frp/frpc.ini`
-    - Server: `/etc/frp/frps.ini`
+    - Client: `/etc/frp/frpc.toml`
+    - Server: `/etc/frp/frps.toml`
 
     Note: You will need `root` access to edit these files. You can also edit the _client_ configuration file using Admin UI.
 
@@ -178,4 +325,4 @@ A fast reverse proxy, helping you to expose a local server behind a NAT or firew
 Official documentation: <https://github.com/fatedier/frp/blob/dev/README.md>  
 Source code: <https://github.com/fatedier/frp>
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)

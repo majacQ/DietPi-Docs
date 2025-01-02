@@ -1,3 +1,8 @@
+---
+title: Cloud and Backup Systems Software Options
+description: Description of DietPi software options related to cloud and backup systems
+---
+
 # Cloud & Backup systems
 
 ## Overview
@@ -9,12 +14,14 @@
 - [**UrBackup Server - Full backups for systems on your network**](#urbackup)
 - [**Gogs - GitHub style server, with web interface**](#gogs)
 - [**Gitea - GitHub style server, with web interface**](#gitea)
+- [**Forgejo - GitHub style server, with web interface**](#forgejo)
 - [**Syncthing - Backup and sync server with web interface**](#syncthing)
 - [**MinIO - S3 compatible distributed object server**](#minio)
-- [**Firefox Sync Server - Sync bookmarks, tabs, history and passwords**](#firefox-sync-server)
 - [**vaultwarden - Unofficial Bitwarden password manager server written in Rust**](#vaultwarden)
 - [**FuguHub - Your Own Personal Cloud Server**](#fuguhub)
 - [**File Browser - Light web based file manager with sharing features**](#file-browser)
+- [**Rclone - Utility to sync your files to cloud storages**](#rclone)
+- [**Restic - Fast, efficient and secure command-line backup program**](#restic)
 
 ??? info "How do I run **DietPi-Software** and install **optimised software** items?"
     To install any of the **DietPi optimised software items** listed below run from the command line:
@@ -28,9 +35,9 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## ownCloud
 
@@ -43,22 +50,26 @@ Also Installs:
 
 ![ownCloud web interface screenshot](../assets/images/dietpi-software-cloud-owncloud.png){: width="400" height="218" loading="lazy"}
 
-=== "Access to the web interface"
+=== "Quick start"
 
-    - URL = `http://<your.IP>/owncloud`
-    - Username = `admin`
-    - Password = `<your global password>` (default: `dietpi`)
+    ownCloud is accessible via regular HTTP/HTTPS TCP ports **80**/**443** below the `/owncloud` path:
 
-    If you may want to configure your ownCloud from command line via `occ` command see the [ownCloud admin manual](https://doc.owncloud.org/server/10.5/admin_manual/configuration/server/occ_command.html).
+    - URL: `http://<your.IP>/owncloud`
+    - Username: `admin` (or the one you set in `dietpi.txt`)
+    - Password: `<your global password>` (default: `dietpi`)
 
-    To simplify this configuration, DietPi has added a shortcut to the otherwise necessary `sudo -u www-data php /var/www/owncloud/occ`.  
-    Just use inside your terminal:
+=== "Configuration"
+
+    You can configure ownCloud via CLI from command line. To simplify this, DietPi has added a shortcut to the otherwise necessary `sudo -u www-data php /var/www/owncloud/occ`.  
+    Simply run `occ` from your console:
 
     ```sh
     occ list
     ```
 
-=== "Update ownCloud to the latest version"
+    More details about available commands can be found in the [ownCloud admin manual](https://doc.owncloud.com/server/next/admin_manual/configuration/server/occ_command.html#core-commands).
+
+=== "Update"
 
     1. Option: Use the web-based updater from within the ownCloud web UI settings.
     2. Option: Use the updater script from console (recommended):
@@ -68,7 +79,7 @@ Also Installs:
         1
         ```
 
-    3. Follow the official documentation for a manual upgrade process: <https://doc.owncloud.com/server/admin_manual/maintenance/manual_upgrade.html>
+    3. Follow the official documentation for a manual upgrade process: <https://doc.owncloud.com/server/next/admin_manual/maintenance/upgrading/manual_upgrade.html>
 
 === "FAQ"
 
@@ -80,9 +91,9 @@ Also Installs:
 
     DietPi will automatically apply the max supported upload size to the PHP and ownCloud configs.
 
-    - 32-bit systems can handle 2 GB
-    - 64-bit systems can handle 8796 PB, yep, in petabyte
-    - `echo -e "$(( $(php -r 'print(PHP_INT_MAX);') / 1024 / 1024))MB"`
+    - 32-bit systems can handle 2 GiB
+    - 64-bit systems can handle 8796 PiB, yep, in petabyte
+    - `echo -e "$(( $(php -r 'print(PHP_INT_MAX);') / 1024 / 1024)) MiB"`
 
     **Will my data be saved after deinstallation?**
 
@@ -91,12 +102,8 @@ Also Installs:
 
 ***
 
-Website: <https://owncloud.com>  
-Official documentation: <https://doc.owncloud.org/server/admin_manual>
-
-YouTube video tutorial: *How to Install DietPi OwnCloud on Raspberry Pi*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/-OatWtH1Z9c?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
+Official website: <https://owncloud.com/>  
+Official documentation: <https://doc.owncloud.com/server/next/admin_manual/>
 
 ## Nextcloud
 
@@ -106,61 +113,62 @@ Nextcloud gives you access to all your files wherever you are. Store your docume
 
 === "Quick start"
 
-    Nextcloud is accessible via regular HTTP/HTTPS port **80**/**443** below the `/nextcloud` path:
+    Nextcloud is accessible via regular HTTP/HTTPS ports **80**/**443** below the `/nextcloud` path:
 
-    - URL = `http://<your.IP>/nextcloud/`
-    - Username = `admin`
-    - Password = `<your global password>` (default: `dietpi`)
+    - URL: `http://<your.IP>/nextcloud`
+    - Username: `admin` (or the one you set in `dietpi.txt`)
+    - Password: `<your global password>` (default: `dietpi`)
 
-    To fast access the files, a dedicated USB hard drive is highly recommended.
+=== "Configuration"
 
-=== "Advanced configuration"
-
-    For an advanced setup you could further configure your Nextcloud setup from the command line - see the [Nextcloud Admin guide](https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/occ_command.html).
-
-    To simplify this configuration, DietPi has added a shortcut to the otherwise necessary `sudo -u www-data php /var/www/nextcloud/occ`.  
-    Just use inside your terminal:
+    You can configure Nextcloud via CLI from command line. To simplify this, DietPi has added a shortcut to the otherwise necessary `sudo -u www-data php /var/www/nextcloud/occ`.  
+    Simply run `ncc` from your console:
 
     ```sh
     ncc list
     ```
 
+    More details about available commands can be found in the [Nextcloud admin manual](https://docs.nextcloud.com/server/latest/admin_manual/occ_command.html).
+
 === "Brute-force protection"
 
-    Nextcloud offers built-in brute force protection and additionally a plugin ***Brute-force settings***.  
-    This will delay your login rate in case of several failed login attempts.
-
-    This protection can be extended with Fail2Ban (see following tab).
+    Nextcloud offers built-in brute-force protection, which will delay your login rate in case of several failed login attempts.
 
     See also:
 
-    - <https://apps.nextcloud.com/apps/bruteforcesettings>
     - <https://docs.nextcloud.com/server/latest/admin_manual/configuration_server/bruteforce_configuration.html>
+
+    This protection can be extended with Fail2Ban (see following tab).
 
 === "Fail2Ban integration"
 
-    Using Fail2Ban your can block users after failed login attempts. This hardens your system, e.g. against brute force attacks.
+    Using Fail2Ban your can block users after failed login attempts, which can further harden the brute-force protection of your Nextcloud instance.  
+    To achieve this hardening, execute the following steps:
 
-    - Set options in the ***Nextcloud configuration file*** (typical `/var/www/nextcloud/config/config.php`):
+    1. If not done yet, install Fail2Ban:
 
-        - Add trusted domains if not already set via the `'trusted_domains'` entry.
+        ```sh
+        dietpi-software install 73
+        ```
+
+    1. Set options in the ***Nextcloud configuration file***, typically `/var/www/nextcloud/config/config.php`:
+
+        - Assure that all domains and IPs you use to access your Nextcloud instance were added to the `'trusted_domains'` entry.
 
             ```ini
             'trusted_domains' =>
              array (
                0 => 'localhost',
-               1 => '<your_trusted_domain>',
+               1 => 'your.domain/IP.org',
              ),
             ```
 
-            The entry of the trusted domains is important, because one of the Fail2Ban regular expressions in the Fail2Ban filter file ("Trusted domain error", see below) deals with trusted domain login errors. By default, if you login via a non trusted domain, Nextcloud will show an error login dialog.  
+            The entry of the trusted domains is important, because one of the Fail2Ban filters deals with trusted domain errors ("Trusted domain error", see below). By default, if you try to access with an untrusted domain, Nextcloud will show an error message.  
 
             !!! attention
-              Take care, if you use this "Trusted domain error" `failregex` option and you then reload the page several times (more often than `maxretry` value in the Fail2Ban jail file) you lockout yourself also for logging in via a trusted domain from the IP address you are using.
+                Take care, if you use this "Trusted domain error" `failregex` option and you then reload the page several times (more often than `maxretry` value in the Fail2Ban jail file) you lockout yourself also for logging in via a trusted domain from the IP address you are using.
 
-        - log file options: These are set to appropriate values by default (e.g. `log_level`, `log_type`) resp. DietPi defaults (`logfile` via `SOFTWARE_NEXTCLOUD_DATADIR` within `/boot/dietpi.txt`), so that they do not need to be set as sometimes otherwise described.
-
-    - Create new ***Fail2Ban filter*** (e.g. `/etc/fail2ban/filter.d/nextcloud.conf`):
+    1. Create new ***Fail2Ban filter***, e.g. `/etc/fail2ban/filter.d/nextcloud.conf`:
 
         ```ini
         # Fail2Ban filter for Nextcloud
@@ -172,33 +180,52 @@ Nextcloud gives you access to all your files wherever you are. Store your docume
         datepattern = ,?\s*"time"\s*:\s*"%%Y-%%m-%%d[T ]%%H:%%M:%%S(%%z)?"
         ```
 
-    - Create new ***Fail2Ban jail file*** `/etc/fail2ban/jail.d/nextcloud.local`:
+    1. Create new ***Fail2Ban jail file*** `/etc/fail2ban/jail.d/nextcloud.local`:
 
         ```ini
         [nextcloud]
-        backend = auto
         enabled = true
-        port = http,https
+        backend = auto
+        logpath = /mnt/dietpi_userdata/nextcloud_data/nextcloud.log
+        port = 80,443
         protocol = tcp
         filter = nextcloud
         maxretry = 5
         bantime = 600
-        logpath = /mnt/dietpi_userdata/nextcloud_data/nextcloud.log
         ```
 
-        Check whether the `logpath` is identical to the value in the Nextcloud configuration file (`config.php`see above).
+        Assure that the `logpath` matches the `'datadirectory'` value in the Nextcloud configuration file (`config.php`, see above), or the `'logfile'` value if defined.
 
-        As not specified here, Fail2Ban uses properties like `maxretry`, `bantime`, etc. from `/etc/fail2ban/jail.conf` or `/etc/fail2ban/jail.local` (if present). Note the setting `backend = auto`. By default, `backend` is set to `systemd` in `/etc/fail2ban/jail.conf`. As a result, Fail2Ban ignores the `logpath` entry here in the jail `nextcloud.conf`, with the consequence, that Fail2Ban does not recognize an attack on Nextcloud (port 80, 443) even though attacks are listed in `/mnt/dietpi_userdata/nextcloud_data/nextcloud.log`.
+        Properties not defined here are taken from the `[DEFAULT]` block in `/etc/fail2ban/jail.conf`, or `/etc/fail2ban/jail.local` if present.  
+        Note the setting `backend = auto`: By default, `backend` is set to `systemd` in `/etc/fail2ban/jail.conf`. As a result, Fail2Ban would ignore the `logpath` entry here in the jail `nextcloud.local`, with the consequence that Fail2Ban does not recognize an attack on Nextcloud (port 80, 443), even though attacks are logged in `/mnt/dietpi_userdata/nextcloud_data/nextcloud.log`.
 
-    - Restart Fail2Ban: `systemctl restart fail2ban`.
-    - Test your settings by trying to sign in multiple times from a remote PC with a wrong user or password. After `maxretry` attempts your IP must be banned for `bantime` seconds (DietPi does not respond anymore) as the default action by Fail2Ban is `route`, specified in `/etc/fail2ban/action.d/route.conf`.
-    - Check the current status on your DietPi with `fail2ban-client status nextcloud`.
-    - See also:
-        - [Fail2Ban](../system_security/#fail2ban-protects-your-system-from-brute-force-attacks)
-        - <https://help.nextcloud.com/t/repeated-login-attempts-from-china/6510/11?u=michaing>
-        - <https://www.c-rieger.de/nextcloud-installationsanleitung/#c06>
+    1. Restart Fail2Ban:
 
-=== "Update Nextcloud to the latest version"
+        ```sh
+        systemctl restart fail2ban
+        ```
+
+    1. Test your settings by trying to sign in multiple times from a remote PC with a wrong user or password. After `maxretry` attempts your IP should be banned for `bantime` seconds (DietPi does not respond anymore) as the default action by Fail2Ban is `route`, specified in `/etc/fail2ban/jail.conf` and defined in `/etc/fail2ban/action.d/route.conf`.
+
+    1. Check the current status on your DietPi:
+
+        ```sh
+        fail2ban-client status nextcloud
+        ```
+
+        IPs can be unbanned via:
+
+        ```sh
+        fail2ban-client unban 123.123.123.123
+        ```
+
+    See also:
+
+    - [Fail2Ban](system_security.md#fail2ban)
+    - <https://help.nextcloud.com/t/repeated-login-attempts-from-china/6510/11?u=michaing>
+    - <https://www.c-rieger.de/nextcloud-installationsanleitung/#c06>
+
+=== "Update"
 
     1. Option: Use the web-based updater from within the Nextcloud web UI settings.
     2. Option: Use the updater script from console (recommended):
@@ -219,12 +246,13 @@ Nextcloud gives you access to all your files wherever you are. Store your docume
 
     `/mnt/dietpi_userdata/nextcloud_data` (or `dietpi.txt` choice)
 
-    **Why am I limited to 2GB file size uploads?**
+    **Why am I limited to 2 GiB file size uploads?**
 
     DietPi will automatically apply the max supported upload size to the PHP and Nextcloud configs.
 
-    - 32bit systems can handle 2 GB
-    - 64bit systems can handle 8796 PB (petabytes)
+    - 32-bit systems can handle 2 GiB
+    - 64-bit systems can handle 8796 PiB, yep, in petabyte
+    - `echo -e "$(( $(php -r 'print(PHP_INT_MAX);') / 1024 / 1024)) MiB"`
 
     **Will my data be saved after deinstallation?**
 
@@ -250,7 +278,7 @@ Nextcloud gives you access to all your files wherever you are. Store your docume
 
     **What shall I do about missing `bcmath`, `gmp` and `imagick` PHP modules?**
 
-    After a fresh install via `dietpi-software`, Nextcloud shows a warning *"This instance is missing some recommended PHP modules. For improved performance and better compatibility it is highly recommended to install them."*, also described [here](https://dietpi.com/phpbb/viewtopic.php?p=27383#p27383). We propose to ignore them, `imagick` is not needed at all and a subject of discussion as of security issues, `bcmath` and `gmp` are required only if you want to use the WebAuthn passwordless authentication with Nextcloud.  
+    After a fresh install via `dietpi-software`, the Nextcloud admin panel shows warnings about three missing modules. We propose to ignore them: `imagick` is not needed at all and a subject of discussion about security issues, `bcmath` and `gmp` are required only if you want to use the WebAuthn passwordless authentication with Nextcloud.  
     If you must mute those warnings, you can install the modules manually:
 
     ```sh
@@ -262,12 +290,8 @@ Nextcloud gives you access to all your files wherever you are. Store your docume
 ***
 
 Website: <https://nextcloud.com/>  
-Official documentation: <https://docs.nextcloud.com/server/latest/admin_manual/contents.html>
-
-YouTube video tutorial #1: *DietPi Nextcloud Setup on Raspberry Pi 3 B Plus*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/Q3R2RqFSyE4?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
-
+Official documentation: <https://docs.nextcloud.com/server/latest/admin_manual/contents.html>  
+YouTube video tutorial #1: [DietPi Nextcloud Setup on Raspberry Pi 3 B Plus](https://www.youtube.com/watch?v=Q3R2RqFSyE4)  
 YouTube video tutorial #2: [DietPi Docker Nextcloud External Storage Setup with SAMBA SERVER on RPI3B](https://www.youtube.com/watch?v=NOb12BuNpZ8)
 
 ## Nextcloud Talk
@@ -283,17 +307,17 @@ Also installs:
 
 === "Installation notes"
 
-    During installation you will be asked to enter the external server domain and a port, that you want to use for the Coturn TURN server. Note that you need to forward the chosen port and/or open it in your firewall.
+    For video call throughout your local network, a so called [TURN server](https://en.wikipedia.org/wiki/Traversal_Using_Relays_around_NAT) is required. *Coturn* is a common implementation and hence installed by default together with our Nextcloud Talk option.
 
-    If HTTPS was or is enabled via `dietpi-letsencrypt`, Coturn will be configured to use the LetsEncrypt certificates for TLS connections on the chosen TURN server port automatically.  
+    During installation you will be asked to enter your server's external domain and a port, that you want to use for the Coturn TURN server. Note that you need to forward the chosen port and/or open it in your firewall.
 
-    Coturn by default will listen to non-TLS requests as well on the port configured in `/etc/turnserver.conf`. You can force TLS/control this by switching port forwarding in your router and/or opening/dropping ports in your firewall.
-
-    Coturn logging by default is disabled via `/etc/default/coturn` command arguments, since it is very verbose and produces much disk I/O. You can enable and configure logging via `/etc/turnserver.conf`, if required.
+    Coturn will be configured with authentication via shared secret and some additional security measures. For details, see this HowTo: <https://help.nextcloud.com/t/howto-setup-nextcloud-talk-with-turn-server/30794>
 
 ***
 
-Website: <https://nextcloud.com/talk>
+Website: <https://nextcloud.com/talk/>  
+Source code: <https://github.com/nextcloud/spreed>  
+Coturn source code: <https://github.com/coturn/coturn>
 
 ## Pydio
 
@@ -307,7 +331,7 @@ Also Installs:
 
 === "Access to the web interface"
 
-    URL = `http://<your.IP>/pydio`
+    URL: `http://<your.IP>/pydio`
 
 === "First time connect"
 
@@ -343,32 +367,99 @@ Website: <https://pydio.com>
 ## UrBackup
 
 UrBackup Server is an Open Source client/server backup system, that through a combination of image and file backups accomplishes both data safety and a fast restoration time.  
-Basically, it allows you to create a complete system backup, using a simple web interface, for systems on your network.
+Basically, it allows you to create a complete system backup for systems on your network, using a simple web interface.  
+Clients are available for Windows, macOS, Linux and FreeBSD.
 
 ![UrBackup interface screenshot](../assets/images/dietpi-software-cloud-urbackup.png){: width="400" height="103" loading="lazy"}
 
 === "Access to the web interface"
 
-    The web interface is accessible via port **55414**:
+    The web interface is accessible via TCP port **55414**:
 
-    URL = `http://<your.IP>:55414`  
-    Remark: Change the IP address for your system.
+    - URL: `http://<your.IP>:55414`
 
-=== "Backup storage location"
+=== "Configuration"
 
-    The location of the backups can be changed in the web interface:
+    The **configuration of UrBackup** is within these options:
 
-    - Select `Settings`.
-    - Change the Backup Storage Path: `/mnt/dietpi_userdata/urbackup` is recommended.
-    - Click `Save`.
-    - Restart service with `systemctl restart urbackupsrv`.
+    - UrBackup web interface, tab `Settings`
+    - UrBackup configuration file, `/etc/default/urbackupsrv`  
+
+        After editing the config file, the service needs to be restart for changes to take effect:
+
+        ```sh
+        systemctl restart urbackupsrv
+        ```
+
+    **Best practice: Disable "Allow client-side pausing of backups"**  
+    Backup procedures sometimes are paused by the client side which leads to a long backup duration. To avoid this the pausing can be deactivated via the UrBackup web interface:
+
+    - Select `Settings`
+    - Select tab `General` -> `Permissions`
+    - Uncheck option `Allow client-side pausing of backups`
+    - Alternatively this can also be set via the client resp. group based settings in the `Settings` area
+
+=== "Backup storage path"
+
+    The location of the backups can be set **prior to installing UrBackup** via `SOFTWARE_URBACKUP_BACKUPPATH` setting in `/boot/dietpi.txt`. It defaults to `/mnt/dietpi_userdata/urbackup`.
+
+    After the installation, the path can be changed via web interface:
+
+    - Select `Settings`
+    - Select tab `General` -> `Server`
+    - Change `Backup Storage Path`
+    - Click `Save`
+
+    ???+ note "Backup storage directory and access rights"
+        It is necessary that the new backup directory exists, as UrBackup usually has no permissions to pre-create it.  
+        Additionally, you need to grant UrBackup write access. It can be achieved via
+
+        ```sh
+        mkdir /path/to/backup/storage
+        chown -R urbackup:urbackup /path/to/backup/storage
+        ```
 
 === "Download the client"
 
-    Install the appropriate client on the systems you wish to backup from <https://www.urbackup.org/download.html#client_windows>.
+    Install the appropriate client on the systems you wish to backup from <https://www.urbackup.org/download.html#client_windows>.  
+    Remark: For Windows 7 (outdated), the [client version 2.4.11](https://www.urbackup.org/downloads/Client/2.4.11/) has to be used.
+
+=== "Download cache"
+
+    Via web interface `Settings` > `Advanced` section, a temporary download buffer can be enabled, where backups are stored to during download, before being moved to the final backup path. See the [corresponding UrBackup documentation chapter](https://www.urbackup.org/administration_manual.html#x1-700008.5.1) for details.  
+    By default the `/tmp` tmpfs (RAM disk) is used for this, which causes issues if you do not have several free GiB of RAM. The directory can be changed via:
+
+    ```sh
+    nano /etc/default/urbackupsrv
+    ```
+
+    The relevant entry is `DAEMON_TMPDIR`:
+
+    ```sh
+    #Temporary file directory
+    # -- this may get very large depending on the advanced settings
+    DAEMON_TMPDIR='/tmp'
+    ```
+
+    Note that this means doubled file writes and has no benefits as long as the backup duration from clients' side is not time critical, or your backup drive is not very slow. It makes sense only if you have a much faster drive available, or plenty GiB of free RAM to use as backup download buffer.
+
+=== "View logs"
+
+    UrBackup logs to `/var/log/urbackup.log` by default. The path to the log file can be changed via `/etc/default/urbackupsrv`. See "Configuration" tab for details.
+
+=== "Update"
+
+    You can easily update UrBackup by reinstalling it. Your settings and data are preserved:
+
+    ```sh
+    dietpi-software reinstall 111
+    ```
 
 ***
-Website: <https://www.urbackup.org/index.html>
+
+Official website: <https://www.urbackup.org/>  
+Official documentation: <https://www.urbackup.org/administration_manual.html>  
+Official forums: <https://forums.urbackup.org/>
 
 ## Gogs
 
@@ -376,9 +467,11 @@ Your very own GitHub style server, with web interface.
 
 ![Gogs web interface screenshot](../assets/images/dietpi-software-cloud-gogs.png){: width="400" height="175" loading="lazy"}
 
+See also the [**Git**](programming.md#git) client which is available in `dietpi-software` as an installation package.
+
 === "Access to the web interface"
 
-    The web interface is accessible via port **3000**:
+    The web interface is accessible via TCP port **3000**:
 
     - URL: `http://<your.IP>:3000`
 
@@ -404,9 +497,9 @@ Your very own GitHub style server, with web interface.
     If you wish to allow external access to your Gogs server, you will need to setup port forwarding on your router, pointing to the IP address of your DietPi device.
 
     - Port: 3000
-    - Protocol: TCP+UDP
+    - Protocol: TCP
 
-    If an external access is used, HTTPS is strongly recommended to increase your system security. You can get a free certificate e.g. via [dietpi-letsencrypt](../../dietpi_tools/#dietpi-letsencrypt){:class="nospellcheck"}.
+    If an external access is used, HTTPS is strongly recommended to increase your system security. You can get a free certificate e.g. via [dietpi-letsencrypt](../dietpi_tools.md#dietpi-letsencrypt){:class="nospellcheck"}.
 
 === "View logs"
 
@@ -443,6 +536,8 @@ Your very own GitHub style server, with web interface.
 
 ![Gitea logo](../assets/images/dietpi-software-cloud-gitea.jpg){: width="320" height="200" loading="lazy"}
 
+See also the [**Git**](programming.md#git) client which is available in `dietpi-software` as an installation package.
+
 === "Access to the web interface"
 
     The web interface is accessible via port **3000**:
@@ -456,7 +551,7 @@ Your very own GitHub style server, with web interface.
     - Change the following values only:
         - Host: `/run/mysqld/mysqld.sock`
         - Password: `<your global password>` (default: `dietpi`)
-        - SSH Server Domain: `<your.domain/IP>`
+        - Server Domain: `<your.domain/IP>`
         - Gitea Base URL: `http://<your.domain/IP>:3000/`
         - Log Path: `/var/log/gitea` (However, file logging is disabled by default.)
     - Scroll to the bottom of page and select "Install Gitea".
@@ -468,9 +563,9 @@ Your very own GitHub style server, with web interface.
     If you wish to allow external access to your Gitea server, you will need to setup port forwarding on your router, pointing to the IP address of your DietPi device.
 
     - Port: 3000
-    - Protocol: TCP+UDP
+    - Protocol: TCP
 
-    If an external access is used, HTTPS is strongly recommended to increase your system security. You can get a free certificate e.g. via [dietpi-letsencrypt](../../dietpi_tools/#dietpi-letsencrypt){:class="nospellcheck"}.
+    If an external access is used, HTTPS is strongly recommended to increase your system security. You can get a free certificate e.g. via [dietpi-letsencrypt](../dietpi_tools.md#dietpi-letsencrypt){:class="nospellcheck"}.
 
 === "Fail2Ban integration"
 
@@ -523,8 +618,8 @@ Your very own GitHub style server, with web interface.
     - Check whether the failed login has been detected: `fail2ban-client status gitea`
     - When you further try to login `maxretry` times, your IP should be banned for `bantime` seconds, so that neither the Gitea web interface, nor SSH or any other network application will respond to requests from your client. When Fail2Ban was installed via `dietpi-software`, by default `route`/`blackhole` blocking is used, so that `ip r` on the server should show a `blackhole` route for your client's IP.
     - See also:
-        - [Fail2Ban](../system_security/#fail2ban)
-        - <https://docs.gitea.io/en-us/fail2ban-setup/>
+        - [Fail2Ban](system_security.md#fail2ban)
+        - <https://docs.gitea.com/administration/fail2ban-setup>
 
 === "View logs"
 
@@ -546,11 +641,129 @@ Your very own GitHub style server, with web interface.
 
 ***
 
-Official website: <https://gitea.io/>  
-Official documentation: <https://docs.gitea.io/>  
-Official forum: <https://discourse.gitea.io/>  
+Official website: <https://about.gitea.com/>  
+Official documentation: <https://docs.gitea.com/>  
+Official forum: <https://forum.gitea.com/>  
 Source code: <https://github.com/go-gitea/gitea>  
 License: [MIT](https://github.com/go-gitea/gitea/blob/main/LICENSE)
+
+## Forgejo
+
+Your very own GitHub style server, with web interface.
+
+![Forgejo logo](../assets/images/dietpi-software-cloud-forgejo.svg){: width="300" height="113" loading="lazy"}
+
+See also the [**Git**](programming.md#git) client which is available in `dietpi-software` as an installation package.
+
+=== "Access to the web interface"
+
+    The web interface is accessible via port **3000**:
+
+    - URL: `http://<your.IP>:3000`
+
+=== "First run setup"
+
+    Has to be done once, when connected to the web interface:
+
+    - Change the following values only:
+        - Host: `/run/mysqld/mysqld.sock`
+        - Password: `<your global password>` (default: `dietpi`)
+        - Server Domain: `<your.domain/IP>`
+        - Forgejo Base URL: `http://<your.domain/IP>:3000/`
+        - Log Path: `/var/log/forgejo` (However, file logging is disabled by default.)
+    - Scroll to the bottom of page and select "Install Forgejo".
+    - Depending on whether the base URL above was entered correctly/is accessible by the connected browser, you may need to reconnect to the web page using the IP address, e.g.: `http://<your.IP>:3000`
+    - Once the page has reloaded, you will need to click `Register` to create the admin account.
+
+=== "External access"
+
+    If you wish to allow external access to your Forgejo server, there are some options, here are two of them:
+    
+    1. You can setup port forwarding on your router, pointing to the IP address of your DietPi device.
+
+        - Port: 3000
+        - Protocol: TCP
+
+    2. Without port forwarding, you can setup a tunnel or reverse proxy with services like [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/).
+
+    If an external access is used, HTTPS is strongly recommended to increase your system security. You can get a free certificate e.g. via [dietpi-letsencrypt](../dietpi_tools.md#dietpi-letsencrypt){:class="nospellcheck"}.
+
+=== "Fail2Ban integration"
+
+    Using Fail2Ban your can block IP addresses after failed login attempts. This hardens your system against e.g. brute-force attacks.
+
+    === "When using journal logging (default)"
+
+        By default Forgejo logs to the systemd journal (see "View logs" tab), in which case Fail2Ban protection can be enabled with the following steps:
+
+        Create a new filter `/etc/fail2ban/filter.d/forgejo.conf`:
+
+        ```ini
+        [Definition]
+        journalmatch = _SYSTEMD_UNIT=forgejo.service
+        failregex = Failed authentication attempt for .+ from <HOST>:\d+:
+        ```
+
+        Create a new jail `/etc/fail2ban/jail.d/forgejo.conf`:
+
+        ```ini
+        [forgejo]
+        enabled = true
+        backend = systemd
+        ```
+
+    === "When using file logging"
+
+        When file logging is enabled (see "View logs" tab), Fail2Ban protection can be enabled with the following steps:
+
+        Create a new filter `/etc/fail2ban/filter.d/forgejo.conf`:
+
+        ```ini
+        [Definition]
+        failregex = Failed authentication attempt for .+ from <HOST>:\d+:
+        ```
+
+        Create a new jail `/etc/fail2ban/jail.d/forgejo.conf`:
+
+        ```ini
+        [forgejo]
+        enabled = true
+        backend = auto
+        logpath = /var/log/forgejo/forgejo.log
+        ```
+
+    You can specify other properties like `maxretry` or `bantime` to overwrite the defaults in `/etc/fail2ban/jail.conf` or `/etc/fail2ban/jail.local` if present. When done:
+
+    - Restart Fail2Ban: `systemctl restart fail2ban`
+    - Try to login to the Forgejo web interface with a wrong password.
+    - Check whether the failed login has been detected: `fail2ban-client status forgejo`
+    - When you further try to login `maxretry` times, your IP should be banned for `bantime` seconds, so that neither the Forgejo web interface, nor SSH or any other network application will respond to requests from your client. When Fail2Ban was installed via `dietpi-software`, by default `route`/`blackhole` blocking is used, so that `ip r` on the server should show a `blackhole` route for your client's IP.
+    - See also: [Fail2Ban](system_security.md#fail2ban)
+
+=== "View logs"
+
+    By default, logs can be viewed with the following command:
+
+    ```sh
+    journalctl -u forgejo
+    ```
+
+    File logging to `/var/log/forgejo/forgejo.log` can be enabled by editing `/mnt/dietpi_userdata/forgejo/custom/conf/app.ini` and changing `MODE = console` in the `[log]` section to `MODE = file`.
+
+=== "Update to latest version"
+
+    You can easily update Forgejo by reinstalling it. Your settings and data are preserved by this:
+
+    ```sh
+    dietpi-software reinstall 177
+    ```
+
+***
+
+Official website: <https://forgejo.org/>  
+Official documentation: <https://forgejo.org/docs/latest/>  
+Source code: <https://codeberg.org/forgejo/forgejo>  
+License: [MIT](https://codeberg.org/forgejo/forgejo/src/branch/forgejo/LICENSE)
 
 ## Syncthing
 
@@ -601,63 +814,22 @@ It is an open source Kubernetes Native, High Performance Object Storage (S3 Comp
 
 === "Quick start"
 
-    The web interface is accessible via port **9000**:
+    The web interface is accessible via TCP port **9001** and S3 clients need to connect via TCP port **9004**:
 
-    - URL: `http://<your.IP>:9000`
-    - Username: `adminadmin`
-    - Password: `adminadmin`
+    - Web UI URL: `http://<your.IP>:9001`
+    - S3 API URL: `http://<your.IP>:9004`
+    - Username: `minioadmin`
+    - Password: `minioadmin`
     - [MinIO Server Quick Start Guide](https://docs.min.io/docs/minio-quickstart-guide.html)
     - [Python Client Quick Start Guide - MinIO](https://docs.min.io/docs/python-client-quickstart-guide.html)
     - [JavaScript Client Quick Start Guide - MinIO](https://docs.min.io/docs/javascript-client-quickstart-guide.html)
 
 ***
 
-Website: <https://min.io/product/overview>  
-Official documentation: <https://docs.min.io>
-
-## Firefox Sync Server
-
-This is Mozilla's Firefox Sync Server which manages syncing Firefox instance bookmarks, history, tabs and passwords across devices. Out of the box it runs on a Python server for small loads and can be configured to run behind Nginx or Apache.
-
-![Firefox Sync logo](../assets/images/dietpi-software-cloud-firefoxsyncserver.png){: width="300" height="95" loading="lazy"}
-
-=== "Configure Firefox"
-
-    - Open `about:config` to access advanced settings.
-    - Search for: `identity.sync.tokenserver.uri`.
-    - Set value to: `http://<your.IP>:5002/token/1.0/sync/1.5`.
-        - We recommend to access your Firefox Sync Server only from local network or via VPN, keeping the default listening port **5002** closed for access from outside of your LAN.
-        - If you need to access it remotely without VPN, adjust the `public_url` setting inside the config file `/mnt/dietpi_userdata/firefox-sync/syncserver.ini` to contain your public IP or domain and desired port.
-
-=== "Directories"
-
-    - Install directory: `/opt/firefox-sync`
-    - Data directory: `/mnt/dietpi_userdata/firefox-sync`
-    - Config file: `/mnt/dietpi_userdata/firefox-sync/syncserver.ini`
-
-=== "View logs"
-
-    View the logs by executing:
-
-     ```sh
-     journalctl -u firefox-sync
-     ```
-
-=== "Update to latest version"
-
-    You can easily update the Firefox Sync Server by reinstalling it. Your settings and data are preserved by this:
-
-    ```sh
-    dietpi-software reinstall 177
-    ```
-
-***
-
-Official documentation: <https://mozilla-services.readthedocs.io/en/latest/howtos/run-sync-1.5.html>  
-Source code: <https://github.com/mozilla-services/syncserver>  
-License: [MPL2.0](https://github.com/mozilla-services/syncserver/blob/master/LICENSE)
-
-Credits: This software title has been added to DietPi-Software by [CedArctic](https://github.com/CedArctic), many thanks! :D
+Official website: <https://min.io/product/overview>  
+Official documentation: <https://docs.min.io/>  
+Source code: <https://github.com/minio/minio>  
+License: [AGPLv3](https://github.com/minio/minio/blob/master/LICENSE)
 
 ## vaultwarden
 
@@ -753,8 +925,11 @@ vaultwarden is an unofficial Bitwarden password manager server with web interfac
 
 === "Update to latest version"
 
+    As vaultwarden is installed via APT, it can be update with the following commands:
+
     ```sh
-    dietpi-software reinstall 183
+    apt Update
+    apt install vaultwarden
     ```
 
 ***
@@ -830,6 +1005,34 @@ Access and manage your data from anywhere via browser with this lightweight remo
     - Config directory: `/mnt/dietpi_userdata/filebrowser`
     - Default data directory: `/mnt`
 
+=== "Modify the default config"
+
+    File Browser comes with a powerful CLI not only allowing to change the configuration, but also execute commands, set rules, etc. (some settings can also be changed via the web interface).  
+    You can find the full feature set in the official documentation of File Browser, linked below, or run:
+
+    ```sh
+    /opt/filebrowser/filebrowser --help
+    ```
+
+    Here is an example for how to change the default data directory (in this example set to `/foo/bar/baz`):
+    - Stop the service:
+
+        ```sh
+        systemctl stop filebrowser
+        ```
+
+    - Apply new config:
+
+        ```sh
+        /opt/filebrowser/filebrowser config set -r /foo/bar/baz -d /mnt/dietpi_userdata/filebrowser/filebrowser.db
+        ```
+
+    - Bring the service back:
+
+        ```sh
+        systemctl start filebrowser
+        ```
+
 === "View logs"
 
     View the logs by executing:
@@ -852,4 +1055,58 @@ Official documentation: <https://filebrowser.org/>
 Source code: <https://github.com/filebrowser/filebrowser>  
 License: [Apache 2.0](https://github.com/filebrowser/filebrowser/blob/master/LICENSE)
 
-[Return to the **Optimised Software list**](../../software/)
+## Rclone
+
+Rclone is a command-line program to manage files on cloud storage. It is a feature-rich alternative to cloud vendors' web storage interfaces. Over [40 cloud storage products](https://rclone.org/#providers) support Rclone, including S3 object stores, business & consumer file storage services, as well as standard transfer protocols.
+
+![Rclone logo](../assets/images/rclone-logo.svg){: width="300" height="69" loading="lazy"}
+
+=== "Quick start"
+
+    Run `rclone config` to setup. See [Rclone config docs](https://rclone.org/docs/) for more details.
+
+=== "Update"
+
+    Rclone can be updated by simply reinstalling it:
+
+    ```sh
+    dietpi-software reinstall 202
+    ```
+
+***
+
+Official documentation: <https://rclone.org/>  
+Source code: <https://github.com/rclone/rclone>  
+License: [MIT](https://github.com/rclone/rclone/blob/master/COPYING)
+
+## Restic
+
+Restic is a fast, efficient and secure command-line backup program.
+
+![Restic logo](../assets/images/restic-logo.png){: width="250" height="250" loading="lazy"}
+
+=== "Quick start"
+
+In order to create a repository at `/mnt/dietpi_userdata/restic-repo`, run the following command and enter the same password twice:
+
+```console
+$ restic init --repo /mnt/dietpi_userdata/restic-repo
+enter password for new repository:
+enter password again:
+created restic repository 085b3c76b9 at /mnt/dietpi_userdata/restic-repo
+Please note that knowledge of your password is required to access the repository.
+Losing your password means that your data is irrecoverably lost.
+```
+
+!!! warning "Remembering your password is important! If you lose it, you won’t be able to access data stored in the repository."
+
+For more information please read the related section in the official Restic docs: [Preparing a new repository](https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html)
+
+***
+
+Official website: <https://restic.net/>  
+Official documentation: <https://restic.readthedocs.io/en/stable/>  
+Source code: <https://github.com/restic/restic>  
+License: [BSD 2-Clause](https://github.com/restic/restic/blob/master/LICENSE)
+
+[Return to the **Optimised Software list**](../software.md)

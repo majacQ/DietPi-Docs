@@ -1,3 +1,8 @@
+---
+title: DNS Servers Options
+description: Description of DietPi software options related to DNS servers
+---
+
 # DNS Servers
 
 ## Overview
@@ -18,15 +23,15 @@
 
     ![DietPi-Software menu screenshot](../assets/images/dietpi-software.jpg){: width="643" height="365" loading="lazy"}
 
-    To see all the DietPi configurations options, review the [DietPi Tools](../../dietpi_tools/) section.
+    To see all the DietPi configurations options, review the [DietPi Tools](../dietpi_tools.md) section.
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
 
 ## Pi-hole
 
 Pi-hole is a DNS sinkhole with web interface that will block ads for any device on your network.
 
-- Also Installs: [Webserver stack](../webserver_stack/)
+- Also Installs: [Webserver stack](webserver_stack.md)
 
 ![Pi-hole web interface screenshot](../assets/images/dietpi-software-dnsserver-pihole.png){: width="500" height="410" loading="lazy"}
 
@@ -44,7 +49,7 @@ Pi-hole is a DNS sinkhole with web interface that will block ads for any device 
 
     The configuration contains setting devices (e.g. router) to use Pi-hole for DNS resolution.
 
-    <font size="+2">Option 1 - Setup single devices to use the Pi-hole DNS server</font>
+    <h2>Option 1 - Setup single devices to use the Pi-hole DNS server</h2>
 
     Simply change your DNS settings to use the IP address of your Pi-hole device. This will need to be done for each device that you want Pi-hole to work with.
 
@@ -54,7 +59,7 @@ Pi-hole is a DNS sinkhole with web interface that will block ads for any device 
     - On my PC, I would set the DNS address to 192.168.0.100
     - Tutorial [The Ultimate Guide to Changing Your DNS settings](https://www.howtogeek.com/167533/the-ultimate-guide-to-changing-your-dns-server/).
 
-    <font size="+2">Option 2 - Setup your router to use the Pi-hole DNS server</font>
+    <h2>Option 2 - Setup your router to use the Pi-hole DNS server</h2>
 
     This method will automatically point every device (that uses DHCP) on your network to Pi-hole.
     On your routers control panel web page, you will need to find a option called "DNS server". This should be located under DHCP settings.
@@ -82,7 +87,7 @@ Pi-hole is a DNS sinkhole with web interface that will block ads for any device 
         pihole -l on
         ```
 
-        Also the DietPi [logging system](../../dietpi_tools/#quick-selections) needs to be changed, to disable DietPi-RAMlog, as otherwise `/var/log/pihole.log` is cleared hourly.
+        Also the DietPi [logging system](../dietpi_tools/software_installation.md#log-system) needs to be changed, to disable DietPi-RAMlog, as otherwise `/var/log/pihole.log` is cleared hourly.
     2. The logging duration for the database-wise DNS query log in `/etc/pihole/pihole-FTL.db` is reduced from 365 days to 2 days. An internal discussion revealed that no-one of us uses logs old than a few hours. One year of logs leads to database sizes from hundreds of MiBs to GiBs. We leave it at 2 days so that web interface dashboard graphs/diagrams are not empty after Pi-hole (re)starts. You can easily adjust the logging duration by editing the `/etc/pihole/pihole-FTL.conf` config file. E.g. to restore the default 365 days of logs:
 
         ```sh
@@ -111,6 +116,31 @@ Pi-hole is a DNS sinkhole with web interface that will block ads for any device 
     - [The Big Blocklist Collection by `WaLLy3K`](https://firebog.net/)
     - [Phishing Army blocklist](https://phishing.army/)
     - [Whitelist collection by `anudeepND`](https://github.com/anudeepND/whitelist)
+    - [RPiList](https://github.com/RPiList/specials/blob/master/Blocklisten.md): Block- and whitelists with focus on German domains
+
+=== "Handling many lists"
+
+    If you try to add many block- resp. whitelists (e.g. > 1 Mio), it can occur that the `/tmp` filesystem overflows.  
+    If `pihole -g` fails with an error message like `sed: couldn't write 44 items to stdout: No space left on device`, you can verify this case using the `df` command:
+
+    ```
+    root@dietpi:~# df -h /tmp
+    Dateisystem    Größe Benutzt Verf. Verw% Eingehängt auf
+    tmpfs           995M    995M     0  100% /tmp
+    root@dietpi:~#
+    ```
+
+    The output value of "100 %" signals a full `/tmp` filesystem.
+
+    In this case the `/etc/fstab` could be changed to a larger `/tmp` by editing it. We propose to set it to a maximum value of 75 % of your RAM size. E.g. in case of 2 GB RAM, you could adjust the mount option to `size=1500M`.
+    This could lead to an output like
+
+    ```
+    root@dietpi:~# df -h /tmp
+    Dateisystem    Größe Benutzt Verf. Verw% Eingehängt auf
+    tmpfs           1,5G     41M  1,5G    3% /tmp
+    root@dietpi:~#
+    ```
 
 === "Accessing via OpenVPN or WireGuard"
 
@@ -118,21 +148,16 @@ Pi-hole is a DNS sinkhole with web interface that will block ads for any device 
 
 === "Monitor Pi-hole"
 
-    [DietPi-CloudShell](../system_stats/#dietpi-cloudshell) has a Pi-hole scene included, which can be used to monitor the most important DNS query and block statistics. Simply run `dietpi-cloudshell`, select `Scenes` and assure that `8 Pi-hole` is selected. Toggle `Output Display` to choose whether to print the output to the current console or the main screen, then select `Start / Restart` to start the output.
+    [DietPi-CloudShell](system_stats.md#dietpi-cloudshell) has a Pi-hole scene included, which can be used to monitor the most important DNS query and block statistics. Simply run `dietpi-cloudshell`, select `Scenes` and assure that `8 Pi-hole` is selected. Toggle `Output Display` to choose whether to print the output to the current console or the main screen, then select `Start / Restart` to start the output.
 
 ***
 
 Official website: <https://pi-hole.net/>  
 Official documentation: <https://docs.pi-hole.net/>  
 Wikipedia: <https://wikipedia.org/wiki/Pi-hole>  
-Source code: <https://github.com/pi-hole>
-
-DietPi Blog: [Pi-Hole & Unbound: How to have ad-free & safer internet in just few minutes](https://dietpi.com/blog/?p=564)
-
-YouTube video tutorial #1: *Raspberry Pi / Pi-hole / Diet-Pi / Network wide Ad Blocker !!!!*.
-
-<iframe src="https://www.youtube-nocookie.com/embed/RO2_eZlVrj4?rel=0" frameborder="0" allow="fullscreen" width="560" height="315" loading="lazy"></iframe>
-
+Source code: <https://github.com/pi-hole>  
+DietPi Blog: [Pi-Hole & Unbound: How to have ad-free & safer internet in just few minutes](https://dietpi.com/blog/?p=564)  
+YouTube video tutorial #1: [Raspberry Pi / Pi-hole / Diet-Pi / Network wide Ad Blocker !!!!](https://www.youtube.com/watch?v=RO2_eZlVrj4)  
 YouTube video tutorial #2: [Block ads everywhere with Pi-hole and PiVPN on DietPi](https://www.youtube.com/watch?v=qbLEHlKkGiE){:class="nospellcheck"}  
 YouTube video tutorial #3 (German language): [Raspberry Pi & DietPi : Pi-hole der Werbeblocker für Netzwerke mit Anleitung für AVM FritzBox](https://www.youtube.com/watch?v=vXUvFWhXW6c&list=PLQIL7cyHMGboXtOzwAcX4hGPW6ECbVinp&index=6){:class="nospellcheck"}  
 YouTube video tutorial #4 (German language): [Raspberry Pi Zero W mit Pi-hole - günstiger Werbeblocker & Schritt für Schritt Anleitung unter DietPi](https://www.youtube.com/watch?v=IxWuMHu9IYk&list=PLQIL7cyHMGboXtOzwAcX4hGPW6ECbVinp&index=2){:class="nospellcheck"}  
@@ -140,7 +165,7 @@ Blog entry with YouTube video #5 (German language): [Unbound Installation für P
 
 ## Unbound
 
-Unbound is a validating, recursive, caching DNS resolver. It can resolve hostnames by querying the root name servers directly, replacing ISP/public DNS resolvers. Eliminating one player involved in handling your DNS requests, increases your internet privacy. Additionally Unbound can be configured to use the encrypted DoT protocol, which requires again a public DNS provider, but masks requests for your LAN operator and ISP instead. For more info, see the "Activating DNS over TLS (DoT)" tab below.
+Unbound is a validating, recursive, caching DNS resolver. It can resolve hostnames by querying the root name servers directly, replacing ISP/public DNS resolvers. Eliminating one player involved in handling your DNS requests, increases your internet privacy. Additionally Unbound can be configured to use the encrypted DoT (DNS over TLS) protocol, which requires again a public DNS provider, but masks requests for your LAN operator and ISP instead. For more info, see the "Activating DNS over TLS (DoT)" tab below.
 
 ![Unbound logo](../assets/images/dietpi-software-dnsserver-unbound.svg){: width="150" height="34" loading="lazy"}
 
@@ -174,7 +199,7 @@ Unbound is a validating, recursive, caching DNS resolver. It can resolve hostnam
 
 === "Activating DNS over TLS (DoT)"
 
-    DoT sends DNS requests encrypted, masking them from your LAN operator and ISP. But it requires again a public DNS provider, to query the root name servers, which is otherwise, thanks to Unbound, not required. Root name server requests can only be unencrypted, either sent directly from Unbound (default) or by a public provider (when using DoT). Whether DoT (or any other encrypted DNS wrapper protocol) is preferable or not, depends on your individual case and needs, i.e. if you trust your LAN operator and ISP more, or a public DNS provider. You can activate DoT by copying and executing the following command block:
+    [DoT (DNS over TLS)](https://wikipedia.org/wiki/DNS_over_TLS) sends DNS requests encrypted, masking them from your LAN operator and ISP. But it requires again a public DNS provider, to query the root name servers, which is otherwise, thanks to Unbound, not required. Root name server requests can only be unencrypted, either sent directly from Unbound (default) or by a public provider (when using DoT). Whether DoT (or any other encrypted DNS wrapper protocol) is preferable or not, depends on your individual case and needs, i.e. if you trust your LAN operator and ISP more, or a public DNS provider. You can activate DoT by copying and executing the following command block:
 
     ```sh
     cat << '_EOF_' > /etc/unbound/unbound.conf.d/dietpi-dot.conf
@@ -206,9 +231,9 @@ Unbound is a validating, recursive, caching DNS resolver. It can resolve hostnam
 
 ***
 
-Official website: <https://www.nlnetlabs.nl/projects/unbound/about/>  
-Official documentation: <https://nlnetlabs.nl/documentation/unbound/unbound>  
-New WIP documentation: <https://unbound.readthedocs.io/>  
+Official website: <https://nlnetlabs.nl/projects/unbound/about/>  
+Official man pages: <https://nlnetlabs.nl/documentation/unbound/unbound/>  
+Official documentation: <https://unbound.docs.nlnetlabs.nl/en/latest/>  
 Wikipedia: <https://wikipedia.org/wiki/Unbound_(DNS_server)>  
 Source code: <https://github.com/NLnetLabs/unbound>
 
@@ -234,7 +259,7 @@ AdGuard Home is a DNS sinkhole with web interface that will block ads for any de
 
     The configuration contains setting devices (e.g. router) to use AdGuard Home for DNS resolution.
 
-    <font size="+2">Option 1 - Setup single devices to use the AdGuard Home DNS server</font>
+    <h2>Option 1 - Setup single devices to use the AdGuard Home DNS server</h2>
 
     Simply change your DNS settings to use the IP address of your AdGuard Home device. This will need to be done for each device that you want AdGuard Home to work with.
 
@@ -244,7 +269,7 @@ AdGuard Home is a DNS sinkhole with web interface that will block ads for any de
     - On my PC, I would set the DNS address to 192.168.0.100
     - Tutorial [The Ultimate Guide to Changing Your DNS settings](https://www.howtogeek.com/167533/the-ultimate-guide-to-changing-your-dns-server/).
 
-    <font size="+2">Option 2 - Setup your router to use the AdGuard Home DNS server</font>
+    <h2>Option 2 - Setup your router to use the AdGuard Home DNS server</h2>
 
     This method will automatically point every device (that uses DHCP) on your network to AdGuard Home.
     On your routers control panel web page, you will need to find a option called "DNS server". This should be located under DHCP settings.
@@ -273,7 +298,7 @@ AdGuard Home is a DNS sinkhole with web interface that will block ads for any de
     If you forgot your login password for the AdGuard Home admin web page, you can set it with the following shell command on your AdGuard Home device.
 
     ```sh
-    G_CONFIG_INJECT 'password:[[:blank:]]' "  password: $(htpasswd -bnBC 10 '' "<your_new_password>" | tr -d ':\n' | sed 's/\$2y/\$2a/')" /mnt/dietpi_userdata/adguardhome/AdGuardHome.yaml
+    G_CONFIG_INJECT 'password:[[:blank:]]' "    password: $(htpasswd -bnBC 10 '' "<your_new_password>" | tr -d ':\n' | sed 's/\$2y/\$2a/')" /mnt/dietpi_userdata/adguardhome/AdGuardHome.yaml
     systemctl restart adguardhome
     ```
 
@@ -293,4 +318,4 @@ Wikipedia: <https://en.wikipedia.org/wiki/AdGuard#AdGuard_Home>
 Source code: <https://github.com/AdguardTeam/AdGuardHome>  
 License: [GPLv3](https://github.com/AdguardTeam/AdGuardHome/blob/master/LICENSE.txt)
 
-[Return to the **Optimised Software list**](../../software/)
+[Return to the **Optimised Software list**](../software.md)
